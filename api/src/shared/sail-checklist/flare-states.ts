@@ -1,0 +1,6 @@
+export enum FLARES_STATE {
+  VALID = 'VALID',
+  EXPIRED = 'EXPIRED',
+  USED = 'USED',
+  DID_NOT_CHECK = 'DID NOT CHECK',
+}

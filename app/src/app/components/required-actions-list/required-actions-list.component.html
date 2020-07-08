@@ -1,0 +1,17 @@
+<mat-action-list>
+  <h4 mat-header>{{title}}</h4>
+  <a
+    (click)="clicked(action)"
+    *ngFor="let action of actions;"
+    mat-list-item
+    role="option"
+    tabindex="0"
+  >
+    <mat-icon
+      arie-hidden="true"
+      mat-list-icon
+    >{{actionIcon(action.actionType)}}</mat-icon>
+    {{action.description}}
+    <mat-icon>navigate_next</mat-icon>
+  </a>
+</mat-action-list>

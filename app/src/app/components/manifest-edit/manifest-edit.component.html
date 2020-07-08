@@ -1,0 +1,86 @@
+<fieldset
+  class="form"
+  *ngIf="showNewGuestForm"
+>
+  <legend>New Guest Form</legend>
+  <mat-form-field>
+    <mat-label>Guest Name</mat-label>
+    <input
+      matInput
+      #guestName
+      type="text"
+    >
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Guest Of</mat-label>
+    <input
+      matInput
+      #guestOf
+      type="text"
+    >
+  </mat-form-field>
+  <div class="form-controls">
+    <button
+      mat-raised-button
+      (click)="addNewGuest(guestName.value, guestOf.value); "
+    >Add</button>
+    <button
+      mat-raised-button
+      (click)="cancelNewGuest();"
+    >Cancel</button>
+  </div>
+</fieldset>
+
+<div [formGroup]="form">
+  <app-table>
+    <tr>
+      <th>Name</th>
+      <th>Role</th>
+      <th>Presence</th>
+    </tr>
+    <tr
+      [formArrayName]="manifestFormControlName"
+      *ngFor="let item of manifestControls; let i = index;"
+    >
+      <ng-container [formGroupName]="i">
+        <td *ngIf="!item.value.profile">
+          <div class="name-cell">
+            {{item.value.name}}
+            <button
+              *ngIf="item.value.personType === PersonType.GUEST"
+              mat-raised-button
+              (click)='removeGuest(i)'
+            >
+              <app-icon-text
+                icon="remove"
+                text="Remove"
+              ></app-icon-text>
+            </button>
+          </div>
+        </td>
+        <td
+          class="clickable"
+          (click)="showProfileDialog(item.value.profile)"
+          *ngIf="item.value.profile"
+        >{{item.value.name}}</td>
+        <td>
+          {{item.value.personType}}
+          <mat-form-field *ngIf="item.value.personType === PersonType.GUEST">
+            <mat-label>of</mat-label>
+            <input
+              formControlName="guestOf"
+              matInput
+              type="text"
+            >
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-slide-toggle formControlName="present">
+            Yes
+          </mat-slide-toggle>
+        </td>
+      </ng-container>
+
+    </tr>
+  </app-table>
+</div>

@@ -1,0 +1,153 @@
+<mat-card *ngIf="user">
+  <mat-card-header>
+    <div mat-card-avatar>
+      <mat-icon>cloud_upload</mat-icon>
+    </div>
+    <mat-card-title
+      id="pageTitle"
+      tabindex="0"
+      role="heading"
+    >{{title}}</mat-card-title>
+  </mat-card-header>
+  <mat-card-actions *ngIf="shouldShowControls">
+    <ng-container [ngTemplateOutlet]="controls"></ng-container>
+  </mat-card-actions>
+  <mat-card-content>
+    <ng-container [ngTemplateOutlet]="formContent"></ng-container>
+  </mat-card-content>
+  <mat-card-footer>
+    <app-form-errors [form]="form"></app-form-errors>
+    <mat-card-actions>
+      <button
+        (click)="update()"
+        *ngIf="!creating && !shouldDisableUpdateButton"
+        [disabled]="shouldDisableUpdateButton"
+        mat-raised-button
+      >Update</button>
+      <button
+        (click)="create()"
+        *ngIf="creating && !shouldDisableCreateButton"
+        [disabled]="shouldDisableCreateButton"
+        mat-raised-button
+      >Create</button>
+    </mat-card-actions>
+  </mat-card-footer>
+</mat-card>
+
+<ng-template #controls>
+  <button
+    (click)="cancelRequest()"
+    mat-raised-button
+    matTooltip="Mark this request as cancelled"
+  >Cancelled</button>
+  <button
+    (click)="scheduleRequest()"
+    mat-raised-button
+    matTooltip="Mark this request as scheduled"
+  >Scheduled</button>
+  <button
+    (click)="expireRequest()"
+    mat-raised-button
+    matTooltip="Mark this request as expired"
+  >Expired</button>
+</ng-template>
+
+<ng-template #formContent>
+  <ng-container>
+    <ng-container *ngTemplateOutlet="description"></ng-container>
+  </ng-container>
+  <ng-container>
+    <ng-container *ngTemplateOutlet="start"></ng-container>
+  </ng-container>
+  <ng-container>
+    <ng-container *ngTemplateOutlet="end"></ng-container>
+  </ng-container>
+  <ng-container>
+    <ng-container *ngTemplateOutlet="status"></ng-container>
+  </ng-container>
+</ng-template>
+
+<ng-template #description>
+  <form [formGroup]="form">
+    <h4
+      tabindex="-1"
+      aria-hidden="true"
+      id="stepLabelDescription"
+    >Step 1 of 4: Request description</h4>
+    <mat-form-field>
+      <mat-label
+        tabindex="-1"
+        aria-hidden="true"
+      >Request description</mat-label>
+      <input
+        aria-labelledby="stepLabelDescription"
+        aria-required="true"
+        formControlName="description"
+        matInput
+        required
+        type="text"
+      >
+    </mat-form-field>
+  </form>
+</ng-template>
+
+<ng-template #start>
+  <form [formGroup]="form">
+    <h4
+      tabindex="-1"
+      aria-hidden="true"
+      id="stepLabelStart"
+    >Step 2 of 4: Sail start date</h4>
+    <app-date-picker
+      [form]="form"
+      ariaLabel="Step 2 of 4: Sail Start Date"
+      controlName="start"
+      tooltip="Sail Start Date"
+    ></app-date-picker>
+  </form>
+</ng-template>
+
+<ng-template #end>
+  <form [formGroup]="form">
+    <h4
+      tabindex="-1"
+      aria-hidden="true"
+      id="stepLabelDescription"
+    >Step 3 of 4: Sail end date</h4>
+    <app-date-picker
+      [form]="form"
+      ariaLabel="Step 3 of 4: Sail End Date"
+      controlName="end"
+      tooltip="Sail End Date"
+    ></app-date-picker>
+  </form>
+</ng-template>
+
+<ng-template #status>
+  <form [formGroup]="form">
+    <h4
+      tabindex="-1"
+      aria-hidden="true"
+      id="stepLabelStatus"
+    >Step 4 of 4: Request status</h4>
+    <mat-form-field>
+      <mat-label
+        aria-hidden="true"
+        tabindex="-1"
+      >Status</mat-label>
+      <select
+        [attr.aria-disabled]="creating"
+        aria-labelledby="stepLabelStatus"
+        aria-required="true"
+        formControlName="status"
+        matNativeControl
+        required
+      >
+        <option
+          *ngFor="let status of requestStatusValues"
+          [value]="status"
+        >{{status}}</option>
+      </select>
+    </mat-form-field>
+  </form>
+</ng-template>

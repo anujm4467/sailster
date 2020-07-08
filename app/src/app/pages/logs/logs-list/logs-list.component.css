@@ -1,0 +1,8 @@
+mat-expansion-panel-header {
+  padding-left: 10px;
+}
+
+mat-panel-title span {
+  margin-left: 2px;
+  margin-right: 2px;
+}

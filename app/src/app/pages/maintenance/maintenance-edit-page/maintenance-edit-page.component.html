@@ -1,0 +1,160 @@
+<h4 *ngIf="!creatingNewMaintenance && maintenances[maintenanceId] === null">Looks like this maintenance request is
+  missing.</h4>
+<mat-card>
+  <mat-card-header>
+    <div mat-card-avatar>
+      <mat-icon>build</mat-icon>
+    </div>
+    <mat-card-title
+      id="pageTitle"
+      role="heading"
+      tabindex="0"
+    >
+      {{title}}
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-actions>
+    <ng-container [ngTemplateOutlet]="controls"></ng-container>
+  </mat-card-actions>
+  <mat-card-content>
+    <form [formGroup]="maintenanceForm">
+      <ng-container [ngTemplateOutlet]="TemplateRequestStatus"></ng-container>
+      <ng-container [ngTemplateOutlet]="TemplateRequestBoat"></ng-container>
+      <ng-container [ngTemplateOutlet]="TemplateRequestDetails"></ng-container>
+      <ng-container [ngTemplateOutlet]="TemplateRequestServiceDetails"></ng-container>
+      <ng-container [ngTemplateOutlet]="TemplateRequestPictures"></ng-container>
+    </form>
+  </mat-card-content>
+  <mat-card-footer>
+    <app-form-errors [form]="maintenanceForm"></app-form-errors>
+    <mat-card-actions>
+      <button
+        *ngIf="shouldEnableSubmitButton"
+        mat-raised-button
+        (click)="submitForm()"
+      >submit</button>
+    </mat-card-actions>
+  </mat-card-footer>
+</mat-card>
+
+<ng-template #controls>
+</ng-template>
+
+<ng-template #TemplateRequestStatus>
+  <h4
+    aria-hidden="true"
+    tabindex="-1"
+    id="stepStatus"
+  >Step 1 of 5: Request Status</h4>
+  <mat-form-field [formGroup]="maintenanceForm">
+    <mat-label
+      aria-hidden="true"
+      tabindex="-1"
+    >Status</mat-label>
+    <select
+      aria-labelledby="stepStatus"
+      aria-required="true"
+      formControlName="status"
+      matNativeControl
+      required
+    >
+      <option
+        *ngFor="let status of maintenanceStatus | keyvalue"
+        [value]="status.value"
+      >{{status.value}}</option>
+    </select>
+  </mat-form-field>
+</ng-template>
+
+<ng-template #TemplateRequestBoat>
+  <h4
+    aria-hidden="true"
+    tabindex="-1"
+    id="step1"
+  >Step 2 of 5: Boat</h4>
+  <mat-form-field [formGroup]="maintenanceForm">
+    <mat-label
+      aria-hidden="true"
+      tabindex="-1"
+    >Boat</mat-label>
+    <select
+      [compareWith]="compareBoats"
+      aria-labelledby="step1"
+      aria-required="true"
+      formControlName="boat"
+      matNativeControl
+      required
+    >
+      <option
+        *ngFor="let boat of boatsArray"
+        [value]="boat.id"
+      >{{boat.name}}</option>
+    </select>
+  </mat-form-field>
+</ng-template>
+
+<ng-template #TemplateRequestDetails>
+  <h4
+    aria-hidden="true"
+    tabindex="-1"
+    id="step2"
+  >Step 3 of 5: Maintenance Details</h4>
+  <mat-form-field [formGroup]="maintenanceForm">
+    <mat-label
+      aria-hidden="true"
+      tabindex="-1"
+    >Request details</mat-label>
+    <textarea
+      aria-labeledby="step2"
+      formControlName="request"
+      matInput
+      matTooltip="Request Details"
+      required
+    ></textarea>
+  </mat-form-field>
+</ng-template>
+
+<ng-template #TemplateRequestServiceDetails>
+  <h4
+    aria-hidden="true"
+    tabindex="-1"
+    id="step2"
+  >Step 4 of 5: Maintenance Service Details</h4>
+  <mat-form-field [formGroup]="maintenanceForm">
+    <mat-label
+      aria-hidden="true"
+      tabindex="-1"
+    >Service details (fill out when resolving this request)</mat-label>
+    <textarea
+      aria-labeledby="step2"
+      formControlName="serviceDetails"
+      matInput
+      matTooltip="Service Details"
+      [required]="isServiceDetailsRequired"
+    >{{isServiceDetailsRequired}}</textarea>
+  </mat-form-field>
+</ng-template>
+
+<ng-template #TemplateRequestPictures>
+  <h4
+    aria-hidden="true"
+    tabindex="-1"
+    id="step2"
+  >Step 5 of 5: Pictures</h4>
+  <app-image-form
+    (deleteClick)="deletePicture($event)"
+    [form]="maintenanceForm"
+    controlArrayName="pictures"
+  >
+  </app-image-form>
+  <app-file-select
+    (action)="uploadFileToCDN($event)"
+    [id]="maintenancePictureInputId"
+    [progress]="uploadProgress"
+    actionDescription="Choose image file to upload:"
+    actionName="Upload"
+    filerFilter="image/*"
+    [multiple]="false"
+    title="New Image Upload Form"
+  ></app-file-select>
+</ng-template>

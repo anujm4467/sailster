@@ -1,0 +1,54 @@
+<mat-card>
+  <mat-card-header>
+    <div mat-card-avatar>
+      <mat-icon>cloud_queue</mat-icon>
+    </div>
+    <mat-card-title
+      id="pageTitle"
+      tabindex="0"
+      role="heading"
+    >Sail List for {{profile?.name}}</mat-card-title>
+  </mat-card-header>
+  <mat-card-actions *ngTemplateOutlet="CONTROLS_TEMPLATE"></mat-card-actions>
+  <mat-card-content>
+    <ng-container *ngTemplateOutlet="CONTENT_TEMPLATE"></ng-container>
+  </mat-card-content>
+  <mat-card-footer>
+  </mat-card-footer>
+</mat-card>
+
+<ng-template #CONTROLS_TEMPLATE>
+  <button
+    mat-raised-button
+    (click)="getLatestSails()"
+  >Latest</button>
+  <button
+    (click)="getNewerSails()"
+    *ngIf="shouldEnableNewerButton"
+    [disabled]="fetching"
+    mat-raised-button
+  >
+    <mat-icon inline="true">chevron_left</mat-icon>Newer
+  </button>
+  <button
+    (click)="getOlderSails()"
+    *ngIf="shouldEnableOlderButton"
+    [disabled]="fetching"
+    mat-raised-button
+  >Older<mat-icon inline="true">chevron_right</mat-icon></button>
+</ng-template>
+
+<ng-template #CONTENT_TEMPLATE>
+  <h4 #searchCount>Showing {{currentCount}} of {{totalCount}} sails.</h4>
+  <mat-accordion>
+    <app-sail-list
+      (boatFetcher)="getBoat($event)"
+      (clicked)="goToSail($event)"
+      [boats]="boats"
+      [isLoading]="fetching"
+      [sails]="profileSails"
+      emptyMessage="There are no sails."
+      title="{{profile?.name}}'s sails"
+    ></app-sail-list>
+  </mat-accordion>
+</ng-template>

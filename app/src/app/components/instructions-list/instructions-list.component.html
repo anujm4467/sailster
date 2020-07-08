@@ -1,0 +1,19 @@
+<h4 tabindex="0">{{title}}</h4>
+<p
+  *ngIf="!instructions || !instructions.length"
+  tabindex="0"
+>There are no instructions.</p>
+<mat-accordion>
+  <mat-expansion-panel *ngFor="let instruction of instructions; let i = index">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        {{i + 1}}
+      </mat-panel-title>
+      <mat-panel-description>
+        {{instruction.title}}
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <p tabindex="0">{{instruction.instruction}}</p>
+    <app-image-list [pictures]="instruction.pictures"></app-image-list>
+  </mat-expansion-panel>
+</mat-accordion>

@@ -1,0 +1,107 @@
+<mat-card>
+  <mat-card-header>
+    <div mat-card-avatar>
+      <mat-icon>explorer</mat-icon>
+    </div>
+    <mat-card-title
+      id="pageTitle"
+      tabindex="0"
+    >{{title}}</mat-card-title>
+  </mat-card-header>
+  <mat-card-actions>
+    <ng-container [ngTemplateOutlet]="CONTROLS"></ng-container>
+  </mat-card-actions>
+  <mat-card-content>
+    <ng-container [ngTemplateOutlet]="CONTENT_TEMPLATE"></ng-container>
+  </mat-card-content>
+  <mat-card-footer>
+    <ng-container [ngTemplateOutlet]="FOOTER_ACTIONS"></ng-container>
+  </mat-card-footer>
+</mat-card>
+
+<ng-template #CONTENT_TEMPLATE>
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        How-to
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <pre>
+      1. Click start button to start
+         You will be asked to grand access location services the first time.
+         You must grand access.
+         Once promissions are granded, the app will start saving your location locally.
+         You must remain on this page for the duration of the recording session.
+      2. Click pause to stop recording your location.
+      3. Click submit to save the recorded locations to the server.
+
+      If you wish to discard current recording, click Discard button.
+
+      You may repeat steps 1 to 3 as many times as you like.
+    </pre>
+  </mat-expansion-panel>
+  <div class="form">
+    <mat-form-field>
+      <mat-label>Sample every (seconds)</mat-label>
+      <input
+        matInput
+        type="number"
+        min="1"
+        max="60"
+        [ngModel]="sampleRate"
+        (ngModelChange)="sampleRateChangeListener($event)"
+      >
+    </mat-form-field>
+  </div>
+  <label>Total Locations: {{positions.length}}</label>
+  <app-position-view
+    title="First Location"
+    [position]="positions[0]"
+  ></app-position-view>
+  <app-position-view
+    title="Middle Location"
+    [position]="positions[floor(positions.length / 2)]"
+  ></app-position-view>
+  <app-position-view
+    title="Last Location"
+    [position]="positions[positions.length - 1]"
+  ></app-position-view>
+</ng-template>
+
+<ng-template #CONTROLS>
+  <button
+    *ngIf="shouldEnableStartButton()"
+    (click)="startRecording()"
+    mat-raised-button
+    matTooltip="Click to record sail path."
+  >Start</button>
+  <button
+    *ngIf="shouldEnablePauseButton()"
+    (click)="pauseRecording()"
+    mat-raised-button
+    matTooltip="Click to pause recording sail path."
+  >Pause</button>
+  <button
+    *ngIf="shouldEnableResumeButton()"
+    (click)="resumeRecording()"
+    mat-raised-button
+    matTooltip="Click to resume recording sail path."
+  >Resume</button>
+  <button
+    *ngIf="shouldEnableDiscardButton()"
+    (click)="discardRecording()"
+    mat-raised-button
+    matTooltip="Click to discard current recording of sail path."
+  >Discard</button>
+</ng-template>
+
+<ng-template #FOOTER_ACTIONS>
+  <mat-card-actions>
+    <button
+      (click)="submitPositions()"
+      *ngIf="shouldEnableSubmitButton"
+      mat-raised-button
+      matTooltip="Click to submit sail path positions."
+    >submit</button>
+  </mat-card-actions>
+</ng-template>

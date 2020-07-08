@@ -1,0 +1,172 @@
+<mat-card *ngIf="user">
+  <mat-card-header>
+    <div mat-card-avatar>
+      <mat-icon>dashboard</mat-icon>
+    </div>
+    <mat-card-title>
+      <h2 class="card-heading">Main Dashboard</h2>
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-actions>
+    <ng-container [ngTemplateOutlet]="controls"></ng-container>
+  </mat-card-actions>
+  <mat-card-content>
+    <app-required-actions-list
+      *ngIf="myRequiredActions && myRequiredActions?.length"
+      [actions]="myRequiredActions"
+      (actionClick)="gotToRequiredAction($event)"
+    ></app-required-actions-list>
+    <mat-accordion>
+      <mat-expansion-panel
+        [expanded]="true"
+        #myUpcomingSailPanel
+      >
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            My Upcoming Sails
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <ng-container *ngTemplateOutlet="TemplateMyUpcomingSails"></ng-container>
+        <mat-action-row>
+          <button
+            mat-raised-button
+            (click)="fetchMyUpcomingSails(true)"
+            matTooltip="Refresh your upcoming sails list"
+          >Refresh</button>
+          <a
+            *ngIf="shouldShowSailRequestsControls"
+            mat-raised-button
+            [routerLink]="SAIL_REQUESTS_ROUTE"
+            matTooltip="Go to sail requests to request a new sail"
+          >Request</a>
+        </mat-action-row>
+      </mat-expansion-panel>
+      <mat-expansion-panel #availableSailsPanel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Available Sails
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <ng-container *ngTemplateOutlet="TemplateAvailableSails"></ng-container>
+        <mat-action-row>
+          <button
+            mat-raised-button
+            (click)="fetchOtherUpcomingSails(true)"
+            matTooltip="Refresh available sails list"
+          >Refresh</button>
+          <a
+            *ngIf="shouldShowSailRequestsControls"
+            mat-raised-button
+            [routerLink]="SAIL_REQUESTS_ROUTE"
+            matTooltip="Go to sail requests to request a new sail"
+          >Request</a>
+        </mat-action-row>
+      </mat-expansion-panel>
+      <mat-expansion-panel #myPastSailsPanel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            My Past Sails
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <ng-container *ngTemplateOutlet="TemplateMyPastSails"></ng-container>
+      </mat-expansion-panel>
+      <mat-expansion-panel #otherPastSailsPanel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Other Past Sails
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <ng-container *ngTemplateOutlet="TempalteOtherPastSails"></ng-container>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </mat-card-content>
+</mat-card>
+<ng-template #TemplateMyUpcomingSails>
+  <app-sail-list
+    (clicked)="viewSail($event)"
+    (refreshRequest)="fetchMyUpcomingSails(true)"
+    [isLoading]="isLoading"
+    [sails]="myUpcomingSails"
+    [boats]="boats"
+    (boatFetcher)="fetchBoat($event)"
+    emptyMessage="You have no upcoming sails."
+    title="My Upcoming Sails"
+  ></app-sail-list>
+</ng-template>
+<ng-template #TemplateAvailableSails>
+  <app-sail-list
+    (clicked)="viewSail($event)"
+    (refreshRequest)="fetchOtherUpcomingSails(true)"
+    [isLoading]="isLoading"
+    [sails]="allUpcomingSails"
+    [boats]="boats"
+    (boatFetcher)="fetchBoat($event)"
+    emptyMessage="No available sails."
+    title="Available Sails"
+  ></app-sail-list>
+</ng-template>
+<ng-template #TemplateMyPastSails>
+  <app-sail-list
+    (clicked)="viewSail($event)"
+    (refreshRequest)="fetchMyPastSails(true)"
+    [isLoading]="isLoading"
+    [sails]="myPastSails"
+    [boats]="boats"
+    (boatFetcher)="fetchBoat($event)"
+    emptyMessage="No past sails."
+    title="My Past Sails"
+  ></app-sail-list>
+</ng-template>
+<ng-template #TempalteOtherPastSails>
+  <app-sail-list
+    (clicked)="viewSail($event)"
+    (refreshRequest)="fetchOtherPastSails(true)"
+    [isLoading]="isLoading"
+    [sails]="allPastSails"
+    [boats]="boats"
+    (boatFetcher)="fetchBoat($event)"
+    emptyMessage="No past sails."
+    title="Other Past Sails"
+  ></app-sail-list>
+</ng-template>
+<ng-template #controls>
+  <a
+    *ngIf="shouldShowAdminControls"
+    [routerLink]="ADMIN_ROUTE"
+    mat-raised-button
+    matTooltip="Go to admin dashboard"
+  >Admin</a>
+  <a
+    *ngIf="shouldShowBoatsControls"
+    [routerLink]="BOATS_ROUTE"
+    mat-raised-button
+    matTooltip="Go to boats dashboard"
+  >Boats</a>
+  <a
+    *ngIf="shouldShowSailsControls"
+    mat-raised-button
+    [routerLink]="SAILS_ROUTE"
+    matTooltip="Go to sails dashboard"
+  >Sails</a>
+  <a
+    [routerLink]="viewUserSailsRouteLink(user?.profile?.id)"
+    mat-raised-button
+    matTooltip="view all my sails"
+  >
+    My sails
+  </a>
+  <a
+    [routerLink]="listChallengesLink"
+    mat-raised-button
+    matTooltip="view challenges"
+  >
+    Challenges
+  </a>
+  <a
+    [routerLink]="clinicsLink()"
+    mat-raised-button
+    matTooltip="view clinics"
+  >
+    Clinics
+  </a>
+</ng-template>

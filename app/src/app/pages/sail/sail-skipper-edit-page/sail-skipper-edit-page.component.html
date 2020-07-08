@@ -1,0 +1,78 @@
+<h4 *ngIf="!sail === null">Looks like this sail is missing.</h4>
+<mat-card *ngIf="sail">
+  <mat-card-header>
+    <div mat-card-avatar>
+      <mat-icon>emoji_people</mat-icon>
+    </div>
+    <mat-card-title
+      id="pageTitle"
+      role="heading"
+      aria-level="1"
+      tabindex="0"
+    >{{title}}</mat-card-title>
+    <mat-card-subtitle
+      role="heading"
+      aria-level="1"
+      tabindex="0"
+    >{{subtitle}}</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <ng-container *ngTemplateOutlet="CARD_CONTENT"></ng-container>
+  </mat-card-content>
+  <mat-card-footer>
+    <ng-template *ngTemplateOutlet="CARD_FOOTER"></ng-template>
+  </mat-card-footer>
+</mat-card>
+
+<ng-template #CARD_CONTENT>
+  <p aria-live="polite">Current skipper: {{skipperName || 'not assigned'}}</p>
+  <button
+    (click)="setSailSkipper()"
+    *ngIf="sailForm.controls['skipper']?.value"
+    mat-raised-button
+    matTooltip="Unset sail's skipper"
+  >
+    <app-icon-text
+      icon="remove_circle"
+      text="Unset"
+    ></app-icon-text>
+  </button>
+
+  <mat-action-list
+    role='list'
+    id="available_skippers_list"
+  >
+    <h3 tabindex="0">Available Skippers During This Time</h3>
+    <div class="form">
+      <app-list-filter
+        label="Search skippers by name or email"
+        ariaLabel="Search skippers by name email"
+        tooltip="Search skippers by name or email"
+        (filter)="filterListener($event)"
+      ></app-list-filter>
+    </div>
+    <mat-list-item
+      (click)="setSailSkipper(skipper.id)"
+      *ngFor="let skipper of filteredAvailableSkippers; let i = index"
+      attr.aria-label="Skipper {{i + 1}} of {{filteredAvailableSkippers.length}} {{skipper.name}}"
+      matTooltip="Click to assign as sail's skipper"
+      role="option"
+    >
+      <mat-icon matListIcon>add</mat-icon>{{i + 1 }}. {{skipper.name}}
+    </mat-list-item>
+    <mat-list-item *ngIf="!filteredAvailableSkippers || filteredAvailableSkippers.length === 0">No skippers are
+      available during this
+      time.</mat-list-item>
+  </mat-action-list>
+
+</ng-template>
+
+<ng-template #CARD_FOOTER>
+  <mat-card-actions>
+    <button
+      *ngIf="shoulEnableSubmitButton"
+      mat-raised-button
+      (click)="submitForm()"
+    >Submit</button>
+  </mat-card-actions>
+</ng-template>

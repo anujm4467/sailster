@@ -1,0 +1,126 @@
+<mat-card>
+  <mat-card-header>
+    <div mat-card-avatar>
+      <mat-icon>library_books_outline</mat-icon>
+    </div>
+    <mat-card-title
+      id="pageTitle"
+      tabindex="0"
+      role="heading"
+    >Activity Logs</mat-card-title>
+  </mat-card-header>
+  <mat-card-actions *ngTemplateOutlet="CONTROLS_TEMPLATE"></mat-card-actions>
+  <mat-card-content>
+    <ng-container *ngTemplateOutlet="CONTENT_TEMPLATE"></ng-container>
+  </mat-card-content>
+  <mat-card-footer>
+  </mat-card-footer>
+</mat-card>
+
+<ng-template #CONTROLS_TEMPLATE>
+  <button
+    mat-raised-button
+    (click)="getLatestLogs()"
+  >Latest</button>
+  <button
+    (click)="getNewerLogs()"
+    *ngIf="shouldEnableNewerButton"
+    [disabled]="fetching"
+    mat-raised-button
+  >
+    <mat-icon inline="true">chevron_left</mat-icon>Newer
+  </button>
+  <button
+    (click)="getOlderLogs()"
+    *ngIf="shouldEnableOlderButton"
+    [disabled]="fetching"
+    mat-raised-button
+  >Older<mat-icon inline="true">chevron_right</mat-icon></button>
+</ng-template>
+
+<ng-template #CONTENT_TEMPLATE>
+  <div class="form">
+    <mat-form-field>
+      <mat-label
+        tabindex="-1"
+        aria-hidden="true"
+      >
+        <mat-icon>search</mat-icon>Search users by name or email (min 4 characters)
+      </mat-label>
+      <input
+        #profileSearchInput
+        (keyup)="$event.keyCode === 13? searchCount?.focus() : false"
+        (keyup.enter)="searchCount?.focus(); false"
+        aria-controls="users_table"
+        aria-label="Search users by name or email (minimum 3 characters)."
+        matInput
+        matTooltip="Search user by name or email (minimum 3 characters)."
+        type="text"
+      >
+    </mat-form-field>
+  </div>
+  <h4 #searchCount>Showing {{currentCount}} of {{totalCount}} logs.</h4>
+  <mat-accordion>
+    <ng-container *ngFor="let log of logs;">
+      <ng-container [ngSwitch]="log.type">
+        <ng-container *ngSwitchCase="logTypes.HTTP_REQUEST">
+          <ng-container *ngTemplateOutlet="HTTP_REQUEST_TEMPLATE;context:{log:log}"></ng-container>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+  </mat-accordion>
+</ng-template>
+
+<ng-template
+  #HTTP_REQUEST_TEMPLATE
+  let-log="log"
+>
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <mat-icon
+          *ngIf="+log.data[':status'] < 300"
+          [style.color]="'green'"
+          inline="true"
+        >check_circle_outline</mat-icon>
+        <mat-icon
+          *ngIf="+log.data[':status'] >= 400"
+          [style.color]="'red'"
+          inline="true"
+        >error_outline</mat-icon>
+        <mat-icon
+          *ngIf="+log.data[':status'] >= 300 && +log.data[':status'] < 400"
+          [style.color]="'orange'"
+          inline="true"
+        >cached</mat-icon>
+        <span class="log-time">{{log.createdAt | humanDateWithTime}}</span>
+        <span class="full-screen">by</span>
+        <span
+          (click)="showProfileDialog(getProfile(log.user)); $event.stopPropagation();"
+          *ngIf="log.user"
+          class="full-screen clickable log-user"
+        >{{getProfile(log.user)?.name || log.user}}</span>
+        <span
+          *ngIf="!log.user"
+          class="full-screen log-user"
+        >unknown user</span>
+      </mat-panel-title>
+      <mat-panel-description>
+        {{log.data[':url']}}
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <div>
+      <h3>User:</h3>
+      <app-profile-bullet
+        class="clickable"
+        (click)="showProfileDialog(getProfile(log.user))"
+        *ngIf="log.user"
+        [profile]="getProfile(log.user)"
+      ></app-profile-bullet>
+      <span *ngIf="!log.user">unknown</span>
+      <h3>Info:</h3>
+      <p *ngIf="log.message">{{log.message}}</p>
+      <pre *ngIf="log.data">{{log.data | json}}</pre>
+    </div>
+  </mat-expansion-panel>
+</ng-template>

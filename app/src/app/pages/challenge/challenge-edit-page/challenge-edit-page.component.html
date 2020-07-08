@@ -1,0 +1,116 @@
+<mat-card>
+  <mat-card-header>
+    <div mat-card-avatar>
+      <mat-icon>golf_course</mat-icon>
+    </div>
+    <mat-card-title
+      id="pageTitle"
+      role="heading"
+      tabindex="0"
+    >{{title}}</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <ng-container *ngTemplateOutlet="CHALLENGE_TITLE_TEMPLATE"></ng-container>
+    <ng-container *ngTemplateOutlet="CHALLENGE_DESCRIPTION_TEMPLATE"></ng-container>
+    <ng-container *ngTemplateOutlet="CHALLENGE_DUE_DATE_TEMPLATE"></ng-container>
+    <ng-container *ngTemplateOutlet="CHALLEGE_STATUS_TEMPLATE"></ng-container>
+  </mat-card-content>
+  <mat-card-footer>
+    <app-form-errors [form]="form"></app-form-errors>
+    <mat-card-actions>
+      <button
+        (click)="updateChallenge()"
+        *ngIf="shouldEnableUpdateButton"
+        mat-raised-button
+        mtTooltip="Save challenge changes"
+      >Save</button>
+      <button
+        (click)="createChallenge()"
+        *ngIf="shouldEnableCreateButton"
+        mat-raised-button
+        mtTooltip="Create new challenge"
+      >Create</button>
+    </mat-card-actions>
+  </mat-card-footer>
+</mat-card>
+
+<ng-template #CHALLENGE_TITLE_TEMPLATE>
+  <h4
+    aria-hidden="true"
+    id="step1"
+    tabindex="-1"
+  >Step 1 of 4: Challenge Title</h4>
+  <form [formGroup]="form">
+    <mat-form-field>
+      <mat-label aria-hidden="true">Challenge title</mat-label>
+      <input
+        [formControlName]="ChallengeProps.TITLE"
+        aria-labelledby="step1"
+        matInput
+        matTooltip="Challenge title"
+      >
+    </mat-form-field>
+  </form>
+</ng-template>
+
+<ng-template #CHALLENGE_DESCRIPTION_TEMPLATE>
+  <h4
+    aria-hidden="true"
+    id="step2"
+    tabindex="-1"
+  >Step 2 of 4: Challenge Description</h4>
+  <form [formGroup]="form">
+    <mat-form-field>
+      <mat-label aria-hidden="true">Challenge description</mat-label>
+      <textarea
+        [formControlName]="ChallengeProps.DESCRIPTION"
+        aria-labeledby="step2"
+        matInput
+        matTooltip="Challenge description"
+      ></textarea>
+    </mat-form-field>
+  </form>
+</ng-template>
+
+<ng-template #CHALLENGE_DUE_DATE_TEMPLATE>
+  <h4
+    aria-hidden="true"
+    id="step3"
+    tabindex="-1"
+  >Step 3 of 4: Challenge Due Date</h4>
+  <form [formGroup]="form">
+    <app-date-picker
+      [controlName]="ChallengeProps.DUE_DATE"
+      [form]="form"
+      ariaLabel="Step 3 of 5: Challenge Due Date"
+      tooltip="Challenge due date"
+    ></app-date-picker>
+  </form>
+  <p>Due date preview: {{this.form.controls.dueDate.value | formatDate}}</p>
+</ng-template>
+
+<ng-template #CHALLEGE_STATUS_TEMPLATE>
+  <h4
+    aria-hidden="true"
+    id="step4"
+    tabindex="-1"
+  >Step 4 of 4: Challenge Status</h4>
+  <form [formGroup]="form">
+    <mat-form-field>
+      <mat-label
+        aria-hidden="true"
+        tabindex="-1"
+      >Status</mat-label>
+      <select
+        [formControlName]="ChallengeProps.STATUS"
+        aria-labelledby="step4"
+        matNativeControl
+      >
+        <option
+          *ngFor="let status of ChallengeStatus | keyvalue"
+          [value]="status.value"
+        >{{status.value}}</option>
+      </select>
+    </mat-form-field>
+  </form>
+</ng-template>

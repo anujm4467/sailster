@@ -1,0 +1,76 @@
+<mat-card>
+  <mat-card-header>
+    <div mat-card-avatar>
+      <mat-icon>golf_course</mat-icon>
+    </div>
+    <mat-card-title
+      id="pageTitle"
+      role="heading"
+      tabindex="0"
+    >Challenges</mat-card-title>
+  </mat-card-header>
+  <mat-card-actions>
+    <ng-container *ngTemplateOutlet="CONTROLS_TEMPLATE"></ng-container>
+  </mat-card-actions>
+  <mat-card-content>
+    <ng-container *ngTemplateOutlet="CONTENT_TEMPLATE"></ng-container>
+  </mat-card-content>
+</mat-card>
+
+<ng-template #CONTROLS_TEMPLATE>
+  <a
+    *ngIf="canCreateNewChallenge"
+    mat-raised-button
+    [routerLink]="createChallengeLink"
+    matTooltip="Go to create challenge page"
+  >New</a>
+</ng-template>
+
+<ng-template #CONTENT_TEMPLATE>
+  <h3
+    tabindex="0"
+    *ngIf="!activeChallenges || !activeChallenges.length"
+  >There are no active challenges.</h3>
+  <h3
+    tabindex="0"
+    *ngIf="activeChallenges && activeChallenges.length"
+  >Active Challenges</h3>
+  <mat-accordion>
+    <mat-expansion-panel *ngFor="let challenge of activeChallenges;">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{challenge.title}}
+        </mat-panel-title>
+        <mat-panel-description *ngIf="!windowServer.isSmallWidth">
+          Due {{challenge.dueDate | humanDate}}
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <h3>Challenge Details:</h3>
+      <pre>{{challenge.description}}</pre>
+      <mat-action-row>
+        <a mat-raised-button (click)="viewChallenge(challenge.id)">View</a>
+      </mat-action-row>
+    </mat-expansion-panel>
+  </mat-accordion>
+  <h3
+    tabindex="0"
+    *ngIf="completedChallenges && completedChallenges.length"
+  >Completed Challenges</h3>
+  <mat-accordion>
+    <mat-expansion-panel *ngFor="let challenge of completedChallenges;">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{challenge.title}}
+        </mat-panel-title>
+        <mat-panel-description *ngIf="!windowServer.isSmallWidth">
+          Due {{challenge.dueDate | humanDate}}
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <h3>Challenge Details:</h3>
+      <p>{{challenge.description}}</p>
+      <mat-action-row>
+        <a mat-raised-button (click)="viewChallenge(challenge.id)">View</a>
+      </mat-action-row>
+    </mat-expansion-panel>
+  </mat-accordion>
+</ng-template>

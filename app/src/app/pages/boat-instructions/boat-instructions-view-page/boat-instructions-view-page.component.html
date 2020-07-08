@@ -1,0 +1,30 @@
+<mat-card>
+  <mat-card-header>
+    <div mat-card-avatar>
+      <mat-icon>assignment</mat-icon>
+    </div>
+    <mat-card-title
+      role="heading"
+      tabindex="0"
+      id="pageTitle"
+    >{{title}}</mat-card-title>
+  </mat-card-header>
+  <mat-card-actions>
+    <a
+      (click)="goToBoatInstructions()"
+      *ngIf="shouldEnableEditButton"
+      mat-raised-button
+      matTooltip="Click to edit boat's instructions"
+    >Edit</a>
+  </mat-card-actions>
+  <mat-card-content>
+    <app-instructions-list
+      title="Departure Instructions"
+      [instructions]="departureInstructions"
+    ></app-instructions-list>
+    <app-instructions-list
+      title="Arrival Instructions"
+      [instructions]="arrivalInstructions"
+    ></app-instructions-list>
+  </mat-card-content>
+</mat-card>

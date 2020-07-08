@@ -1,0 +1,41 @@
+<mat-card>
+  <mat-card-header>
+    <div mat-card-avatar>
+      <mat-icon>people_outline</mat-icon>
+    </div>
+    <mat-card-title
+      id="pageTitle"
+      tabindex="0"
+      role="heading"
+    >
+      Sail People Manifest: {{sail?.name}}
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-actions>
+    <ng-container [ngTemplateOutlet]="CONTROLS_TEMPLATE"></ng-container>
+  </mat-card-actions>
+  <mat-card-content>
+    <ng-container [ngTemplateOutlet]="MANIFEST_CONTENT_TEMPLATE"></ng-container>
+  </mat-card-content>
+</mat-card>
+
+<ng-template #CONTROLS_TEMPLATE>
+  <a
+    mat-raised-button
+    aria-label="click to go to sail page."
+    (click)="goToSailPage()"
+  >Sail</a>
+  <a
+    (click)="editSailManifest()"
+    *ngIf="shouldAllowEditManifest"
+    aria-label="click to go to edit sail manifest page."
+    mat-raised-button
+  >Edit</a>
+</ng-template>
+
+<ng-template #MANIFEST_CONTENT_TEMPLATE>
+  <app-manifest-view
+    (openProfileDialog)="showProfileDialog(getProfile($event))"
+    [peopleManifest]="peopleManife"
+  ></app-manifest-view>
+</ng-template>

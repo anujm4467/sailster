@@ -1,0 +1,25 @@
+<footer>
+  <button
+    (click)="decreaseFontSize()"
+    [disabled]="changingAppFont || currentFontSize === min"
+    mat-button
+    matTooltip="Decrease font size"
+  >
+    <mat-icon [inline]="true">remove</mat-icon>
+  </button>
+  <span tabindex="0">
+    <mat-icon [inline]="true">copyright</mat-icon>
+    <span
+      aria-label="End of page"
+      aria-details="end of page"
+    >Blind Sailing Canada</span>
+  </span>
+  <button
+    (click)="increaseFontSize()"
+    [disabled]="changingAppFont || currentFontSize === max"
+    mat-button
+    matTooltip="Increase font size"
+  >
+    <mat-icon [inline]="true">add</mat-icon>
+  </button>
+</footer>

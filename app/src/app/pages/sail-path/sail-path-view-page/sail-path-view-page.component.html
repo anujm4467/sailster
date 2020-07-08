@@ -1,0 +1,61 @@
+<p *ngIf="!sailPath">Looks like this sail path does not exist.</p>
+<mat-card *ngIf="sailPath">
+  <mat-card-header>
+    <div mat-card-avatar>
+      <mat-icon>explorer</mat-icon>
+    </div>
+    <mat-card-title
+      id="pageTitle"
+      tabindex="0"
+    >{{title}}</mat-card-title>
+  </mat-card-header>
+  <mat-card-actions>
+    <ng-container
+      *ngIf="shouldShowControls"
+      [ngTemplateOutlet]="CONTROLS"
+    ></ng-container>
+  </mat-card-actions>
+  <mat-card-content>
+    <ng-container [ngTemplateOutlet]="SAIL_PATH"></ng-container>
+  </mat-card-content>
+</mat-card>
+
+<ng-template #SAIL_PATH>
+  <app-table>
+    <tr>
+      <th>Sail</th>
+      <td>{{getSail(sailPath.sail)?.name}}</td>
+    </tr>
+    <tr>
+      <th>Submitted By</th>
+      <td class="clickable" (click)="showProfileDialog(getProfile(sailPath.submittedBy))"><app-profile-bullet [profile]="getProfile(sailPath.submittedBy)"></app-profile-bullet></td>
+    </tr>
+    <tr>
+      <th>Submitted On</th>
+      <td>{{sailPath.submittedOn | humanDateWithTime: true}}</td>
+    </tr>
+    <tr>
+      <th>Description</th>
+      <td>{{sailPath.description}}</td>
+    </tr>
+  </app-table>
+  <h4>Recorded Positions</h4>
+  <app-position-view
+    *ngFor="let position of sailPath.positions; let i = index;"
+    [position]="position"
+    title="{{i+1}} of {{sailPath.positions.length}}"
+  ></app-position-view>
+</ng-template>
+
+<ng-template #CONTROLS>
+  <a
+    (click)="editSailPath()"
+    mat-raised-button
+    matTooltip="Click to edit this sail path."
+  >Edit</a>
+  <a
+    (click)="recordSailPath()"
+    mat-raised-button
+    matTooltip="Click to record sail path."
+  >Record</a>
+</ng-template>

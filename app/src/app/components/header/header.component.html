@@ -1,0 +1,35 @@
+<mat-toolbar color="primary">
+  <h1>
+    <a
+      routerLink="/dashboard"
+      matTooltip="Go back to dashboard."
+      *ngIf="!windowServer.isSmallWidth"
+    >Blind Sailing Canada</a>
+    <a
+      *ngIf="windowServer.isSmallWidth"
+      routerLink="/dashboard"
+      matTooltip="Go back to dashboard."
+    >BSC</a>
+  </h1>
+  <div
+    *ngIf="userProfile"
+    class="header-controls"
+  >
+    <a
+      aria-label="your profile"
+      matTooltip="Click to go to your profile"
+      [routerLink]="viewProfileLink"
+    >
+      <app-profile-bullet [profile]="userProfile"></app-profile-bullet>
+    </a>
+    <button
+      mat-button
+      aria-label="log out"
+      matTooltip="log out"
+      (click)="logout()"
+    >
+      <mat-icon>exit_to_app</mat-icon>
+    </button>
+  </div>
+</mat-toolbar>
+<ng-content></ng-content>

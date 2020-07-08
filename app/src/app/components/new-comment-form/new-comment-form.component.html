@@ -1,0 +1,21 @@
+<form [formGroup]="form">
+  <mat-form-field>
+    <mat-label
+      aria-hidden="true"
+      tabindex="-1"
+    >Add New Comment</mat-label>
+    <textarea
+      aria-labeledby="step2"
+      formControlName="comment"
+      matInput
+      matTooltip="New Comment"
+    ></textarea>
+  </mat-form-field>
+  <div class="form-controls">
+    <button
+      mat-raised-button
+      *ngIf="shouldEnableCommentButton"
+      (click)="addNewComment()"
+    >post</button>
+  </div>
+</form>

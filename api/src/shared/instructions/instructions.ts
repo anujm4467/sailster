@@ -1,0 +1,4 @@
+export enum INSTRUCTIONS {
+  DEPARTURE = 'DEPARTURE',
+  ARRIVAL = 'ARRIVAL',
+}

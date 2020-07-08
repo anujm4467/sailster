@@ -1,0 +1,79 @@
+<h4 *ngIf="!sail === null">Looks like this sail is missing.</h4>
+<mat-card *ngIf="sail">
+  <mat-card-header>
+    <div mat-card-avatar>
+      <mat-icon>emoji_people</mat-icon>
+    </div>
+    <mat-card-title
+      id="pageTitle"
+      role="heading"
+      aria-level="1"
+      tabindex="0"
+    >{{title}}</mat-card-title>
+    <mat-card-subtitle
+      role="heading"
+      aria-level="1"
+      tabindex="0"
+    >{{subtitle}}</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <ng-container *ngTemplateOutlet="CARD_CONTENT"></ng-container>
+  </mat-card-content>
+  <mat-card-footer>
+    <ng-template *ngTemplateOutlet="CARD_FOOTER"></ng-template>
+  </mat-card-footer>
+</mat-card>
+
+<ng-template #CARD_CONTENT>
+  <p aria-live="polite">Current passengers: {{passengerNames || 'not assigned'}}</p>
+
+  <mat-action-list role='list'>
+    <h3>Current Passengers</h3>
+    <mat-list-item
+      (click)="removeSailPassenger(passengerId)"
+      *ngFor="let passengerId of sailForm.controls['passengers'].value; let i = index"
+      attr.aria-label="Passenger {{i + 1}} of {{sailForm.controls.passengers.value.length}} {{getPassengerName(passengerId)}}"
+      matTooltip="Click to remove from sail's passengers"
+      role="option"
+    >
+      <mat-icon matListIcon>remove</mat-icon>{{i + 1 }}. {{getPassengerName(passengerId)}}
+    </mat-list-item>
+    <mat-list-item *ngIf="!sailForm.controls['passengers'].value || sailForm.controls['passengers'].value.length === 0">
+      There are no passengers on this sail.</mat-list-item>
+  </mat-action-list>
+  <mat-divider></mat-divider>
+  <mat-action-list role='list'>
+    <h3>Available Members During This Time</h3>
+    <div class="form">
+      <app-list-filter
+        label="Search members by name or email"
+        ariaLabel="Search members by name email"
+        tooltip="Search members by name or email"
+        (filter)="filterListener($event)"
+      ></app-list-filter>
+    </div>
+    <mat-list-item
+      (click)="addSailPassenger(passenger.id)"
+      *ngFor="let passenger of filteredAvailablePassengers; let i = index"
+      attr.aria-label="Passenger {{i + 1}} of {{filteredAvailablePassengers.length}} {{passenger.name}}"
+      matTooltip="Click to assign to sail's passengers"
+      role="option"
+    >
+      <mat-icon matListIcon>add</mat-icon>{{i + 1 }}. {{passenger.name}}
+    </mat-list-item>
+    <mat-list-item *ngIf="!filteredAvailablePassengers || filteredAvailablePassengers.length === 0">
+      No members are available during this time.
+    </mat-list-item>
+  </mat-action-list>
+
+</ng-template>
+
+<ng-template #CARD_FOOTER>
+  <mat-card-actions>
+    <button
+      *ngIf="shoulEnableSubmitButton"
+      mat-raised-button
+      (click)="submitForm()"
+    >Submit</button>
+  </mat-card-actions>
+</ng-template>

@@ -1,0 +1,57 @@
+<mat-card>
+  <mat-card-header>
+    <div mat-card-avatar>
+      <mat-icon>explorer</mat-icon>
+    </div>
+    <mat-card-title
+      id="pageTitle"
+      tabindex="0"
+    >{{title}}</mat-card-title>
+  </mat-card-header>
+  <mat-card-actions>
+    <ng-container [ngTemplateOutlet]="CONTROLS"></ng-container>
+  </mat-card-actions>
+  <mat-card-content>
+    <ng-container [ngTemplateOutlet]="FORM_CONTENT"></ng-container>
+  </mat-card-content>
+  <mat-card-footer>
+    <ng-container [ngTemplateOutlet]="FOOTER_ACTIONS"></ng-container>
+  </mat-card-footer>
+</mat-card>
+
+<ng-template #FORM_CONTENT>
+  <form [formGroup]="form">
+    <mat-form-field>
+      <mat-label
+        tabindex="-1"
+        aria-hidden="true"
+      >
+        Description
+      </mat-label>
+      <input
+        formControlName="description"
+        matInput
+        type="text"
+      >
+    </mat-form-field>
+  </form>
+</ng-template>
+
+<ng-template #CONTROLS>
+  <button
+    (click)="recordSailPath()"
+    mat-raised-button
+    matTooltip="Click to record sail path."
+  >Record</button>
+</ng-template>
+
+<ng-template #FOOTER_ACTIONS>
+  <mat-card-actions>
+    <button
+      (click)="submitForm()"
+      *ngIf="shouldEnableSubmitButton"
+      mat-raised-button
+      matTooltip="Click to submit sail path form."
+    >submit</button>
+  </mat-card-actions>
+</ng-template>

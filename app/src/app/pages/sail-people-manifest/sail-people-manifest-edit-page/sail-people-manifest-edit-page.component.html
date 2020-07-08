@@ -1,0 +1,53 @@
+<h3 *ngIf="sail === null">Looks like this sail does not exist.</h3>
+<mat-card *ngIf="sail && user">
+  <mat-card-header>
+    <div mat-card-avatar>
+      <mat-icon>people_outline</mat-icon>
+    </div>
+    <mat-card-title
+      id="pageTitle"
+      tabindex="0"
+      role="heading"
+    >
+      Sail People Manifest {{sail?.name}}
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-actions>
+    <ng-container [ngTemplateOutlet]="CONTROLS_TEMPLATE"></ng-container>
+  </mat-card-actions>
+  <mat-card-content>
+    <ng-container [ngTemplateOutlet]="MANIFEST_CONTENT_TEMPLATE"></ng-container>
+  </mat-card-content>
+  <mat-card-footer>
+    <mat-card-actions>
+      <ng-container [ngTemplateOutlet]="FOOTER_CONTROLS"></ng-container>
+    </mat-card-actions>
+  </mat-card-footer>
+</mat-card>
+
+<ng-template #FOOTER_CONTROLS>
+  <button
+    mat-raised-button
+    *ngIf="shouldEnableSubmitButton"
+    (click)="submitManifest()"
+  >Submit</button>
+</ng-template>
+
+<ng-template #CONTROLS_TEMPLATE>
+  <button
+    mat-raised-button
+    (click)="addGuest()"
+  >Add Guest</button>
+</ng-template>
+
+<ng-template #MANIFEST_CONTENT_TEMPLATE>
+  <app-manifest-edit
+    (guestRemoved)="removeGuest($event)"
+    (newGuestAdded)="addNewGuest($event)"
+    (newGuestCancelled)="cancelNewGuest()"
+    (openProfileDialog)="showProfileDialog(getProfile($event))"
+    [form]="form"
+    [showNewGuestForm]="showNewGuestForm"
+    manifestFormControlName="peopleManifest"
+  ></app-manifest-edit>
+</ng-template>

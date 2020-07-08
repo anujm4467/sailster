@@ -1,0 +1,58 @@
+<mat-card *ngIf="user">
+  <mat-card-header>
+    <div mat-card-avatar>
+      <mat-icon>cloud_upload</mat-icon>
+    </div>
+    <mat-card-title
+      id="pageTitle"
+      role="heading"
+      tabindex="0"
+    >Sail Requests</mat-card-title>
+  </mat-card-header>
+  <mat-card-actions>
+    <ng-container [ngTemplateOutlet]="CONTROLS"></ng-container>
+  </mat-card-actions>
+  <mat-card-content>
+    <h3
+      *ngIf="!newSailRequestsArray?.length"
+      tabindex="0"
+    >There are no mew sail requests.</h3>
+    <ng-container *ngTemplateOutlet="REQUEST_LIST; context:{header:'New Requests', requests: newSailRequestsArray}">
+    </ng-container>
+    <ng-container
+      *ngTemplateOutlet="REQUEST_LIST; context:{header:'Scheduled Requests', requests: scheduledSailRequestsArray}"
+    ></ng-container>
+    <ng-container
+      *ngTemplateOutlet="REQUEST_LIST; context:{header:'Expired Requests', requests: expiredSailRequestsArray}"
+    ></ng-container>
+    <ng-container
+      *ngTemplateOutlet="REQUEST_LIST; context:{header:'Cancelled Requests', requests: cancelledSailRequestsArray}"
+    ></ng-container>
+  </mat-card-content>
+</mat-card>
+<ng-template #CONTROLS>
+  <a
+    [routerLink]="createSailRequestRouteLink"
+    mat-raised-button
+    matTooltip="Create a new sail request"
+  >New</a>
+</ng-template>
+
+<ng-template
+  #REQUEST_LIST
+  let-header="header"
+  let-requests="requests"
+>
+  <ng-container *ngIf="requests?.length">
+    <h3 tabindex="0">{{header}}</h3>
+    <app-sail-request-list
+      (cancelSailRequest)="cancelRequest($event)"
+      (editSailRequest)="editSailRequest($event)"
+      (profileDialog)="showProfileDialog($event)"
+      (profileFetcher)="getProfile($event)"
+      [profiles]="profiles"
+      [sailRequests]="requests"
+      [user]="user"
+    ></app-sail-request-list>
+  </ng-container>
+</ng-template>

@@ -1,0 +1,34 @@
+<app-table [title]="title" *ngIf="position">
+  <tr>
+    <th>timestamp</th>
+    <td>{{position.timestamp}}</td>
+  </tr>
+  <tr>
+    <th>accuracy</th>
+    <td>{{position.coords.accuracy}}</td>
+  </tr>
+  <tr>
+    <th>altitude</th>
+    <td>{{position.coords.altitude}}</td>
+  </tr>
+  <tr>
+    <th>altitude accuracy</th>
+    <td>{{position.coords.altitudeAccuracy}}</td>
+  </tr>
+  <tr>
+    <th>heading</th>
+    <td>{{position.coords.heading}}</td>
+  </tr>
+  <tr>
+    <th>latitude</th>
+    <td>{{position.coords.latitude}}</td>
+  </tr>
+  <tr>
+    <th>longitude</th>
+    <td>{{position.coords.longitude}}</td>
+  </tr>
+  <tr>
+    <th>speed</th>
+    <td>{{position.coords.speed}}</td>
+  </tr>
+</app-table>

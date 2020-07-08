@@ -1,0 +1,119 @@
+<app-table>
+  <tr
+    tabindex="0"
+    role="option"
+    attr.aria-label="Sail name: {{sailName}}. Click to go to this sail."
+    (click)="viewSail()"
+  >
+    <th
+      tabindex="-1"
+      aria-hidden="true"
+    >Sail</th>
+    <td
+      tabindex="-1"
+      aria-hidden="true"
+      class="clickable"
+    >{{sailName}}</td>
+  </tr>
+  <tr
+    tabindex="0"
+    role="option"
+    attr.aria-label="Sail start date: {{formatDate(checklist.sailStart)}}"
+  >
+    <th
+      tabindex="-1"
+      aria-hidden="true"
+    >Start</th>
+    <td
+      tabindex="-1"
+      aria-hidden="true"
+    >{{formatDate(checklist.sailStart)}}</td>
+  </tr>
+  <tr
+    tabindex="0"
+    role="option"
+    attr.aria-label="Sail end date: {{formatDate(checklist.sailEnd)}}"
+  >
+    <th
+      tabindex="-1"
+      aria-hidden="true"
+    >End</th>
+    <td
+      tabindex="-1"
+      aria-hidden="true"
+    >{{formatDate(checklist.sailEnd)}}</td>
+  </tr>
+  <tr
+    tabindex="0"
+    role="option"
+    attr.aria-label="Sail destination: {{checklist?.sailDestination}}"
+  >
+    <th
+      tabindex="-1"
+      aria-hidden="true"
+    >Destination</th>
+    <td
+      tabindex="-1"
+      aria-hidden="true"
+    >{{checklist?.sailDestination}}</td>
+  </tr>
+  <tr
+    tabindex="0"
+    role="option"
+    attr.aria-label="Weather: {{checklist?.weather}}"
+  >
+    <th
+      tabindex="-1"
+      aria-hidden="true"
+    >Weather</th>
+    <td
+      tabindex="-1"
+      aria-hidden="true"
+    >{{checklist?.weather}}</td>
+  </tr>
+  <tr>
+    <td colspan="2">
+      <mat-accordion>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <h4 tabindex="0">People Manifest</h4>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <app-manifest-view
+            (openProfileDialog)="showProfileDialog($event)"
+            [peopleManifest]="checklist.peopleManifest"
+          ></app-manifest-view>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2">
+      <mat-accordion>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <h4 tabindex="0">Before Departure</h4>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <app-checklist-view [checklist]="checklist?.before"></app-checklist-view>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2">
+      <mat-accordion>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <h4 tabindex="0">After Arrival</h4>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <app-checklist-view [checklist]="checklist?.after"></app-checklist-view>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </td>
+  </tr>
+</app-table>

@@ -1,0 +1,27 @@
+<app-table>
+  <tr aria-hidden="true">
+    <th aria-hidden="true">Name</th>
+    <th aria-hidden="true">Role</th>
+    <th aria-hidden="true">Present</th>
+  </tr>
+  <tr
+    role="option"
+    *ngFor="let person of peopleManifest"
+  >
+    <td
+      *ngIf="!person.profile"
+      tabindex="0"
+    >{{person.name}}</td>
+    <td
+      (click)="showProfileDialog(person.profile)"
+      *ngIf="person.profile"
+      class="clickable"
+      tabindex="0"
+    >{{person.name}}</td>
+    <td *ngIf="person.personType !== PersonType.GUEST">{{person.personType}}</td>
+    <td *ngIf="person.personType === PersonType.GUEST">
+      {{person.personType}} of {{person.guestOf}}
+    </td>
+    <td>{{person.present? "Yes" : "No"}}</td>
+  </tr>
+</app-table>

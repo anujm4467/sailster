@@ -1,0 +1,69 @@
+<mat-card>
+  <mat-card-header>
+    <div mat-card-avatar>
+      <mat-icon>local_hospital</mat-icon>
+    </div>
+    <mat-card-title
+      id="pageTitle"
+      tabindex="0"
+      role="heading"
+    >{{title}}</mat-card-title>
+  </mat-card-header>
+  <mat-card-actions *ngTemplateOutlet="CONTROLS_TEMPLATE"></mat-card-actions>
+  <mat-card-content>
+    <ng-container *ngTemplateOutlet="CONTENT_TEMPLATE"></ng-container>
+  </mat-card-content>
+  <mat-card-footer>
+  </mat-card-footer>
+</mat-card>
+
+<ng-template #CONTROLS_TEMPLATE>
+</ng-template>
+
+<ng-template #CONTENT_TEMPLATE>
+  <mat-action-list
+    role='list'
+    id="currently_enrolled_list"
+  >
+    <h3 tabindex="0">Currently Enrolled</h3>
+    <mat-list-item
+      (click)="removeStudent(profileId)"
+      *ngFor="let profileId of form.controls[ClinicProps.ENROLLED_USERS].value; let i = index"
+      attr.aria-label="User {{i + 1}} of {{filteredProfiles.length}} {{getProfile(profileId)?.name}}"
+      matTooltip="Click to disenroll this user from this clinic."
+      role="option"
+    >
+      <mat-icon matListIcon>remove</mat-icon>{{i + 1 }}. {{getProfile(profileId)?.name}}
+    </mat-list-item>
+  </mat-action-list>
+  <mat-action-list
+    role='list'
+    id="available_profiles"
+  >
+    <h3 tabindex="0">Users</h3>
+    <div class="form">
+      <app-list-filter
+        label="Search users by name or email"
+        ariaLabel="Search users by name email"
+        tooltip="Search users by name or email"
+        (filter)="profileFilterListener($event)"
+      ></app-list-filter>
+    </div>
+    <mat-list-item
+      (click)="addStudent(profile.id)"
+      *ngFor="let profile of filteredProfiles; let i = index"
+      attr.aria-label="User {{i + 1}} of {{filteredProfiles.length}} {{profile.name}}"
+      matTooltip="Click to enroll this user in this clinic."
+      role="option"
+    >
+      <mat-icon matListIcon>add</mat-icon>{{i + 1 }}. {{profile.name}}
+    </mat-list-item>
+  </mat-action-list>
+  <div class="form-controls">
+    <button
+      (click)="saveClinic()"
+      *ngIf="shouldEnableSaveButton"
+      mat-raised-button
+    >Save</button>
+  </div>
+</ng-template>

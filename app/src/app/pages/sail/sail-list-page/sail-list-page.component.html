@@ -1,0 +1,282 @@
+<mat-card>
+  <mat-card-header>
+    <div mat-card-avatar>
+      <mat-icon>cloud_queue</mat-icon>
+    </div>
+    <mat-card-title
+      id="pageTitle"
+      tabindex="0"
+    >Sails</mat-card-title>
+  </mat-card-header>
+  <mat-card-actions>
+    <ng-container
+      *ngIf="shouldShowControls"
+      [ngTemplateOutlet]="controls"
+    ></ng-container>
+  </mat-card-actions>
+  <mat-card-content>
+    <section>
+      <mat-accordion>
+        <mat-expansion-panel #filterAccordion>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <mat-icon inline="true">search</mat-icon>
+              Search
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <ng-container *ngTemplateOutlet="sailFilter"></ng-container>
+          <mat-action-row>
+            <button
+              (click)="resetFilter()"
+              mat-raised-button
+              matTooltip="Reset sail filter"
+              type="reset"
+            >Reset</button>
+            <button
+              (click)="fetchSails(true); filterAccordion.close(); sailsFound?.focus();"
+              mat-raised-button
+              matpTooltip="Apply sail filter"
+            >Apply</button>
+          </mat-action-row>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </section>
+    <section>
+      <h4
+        tabindex="0"
+        #sailsFound
+        aria-live="assertive"
+        role="option"
+      >Found {{sailsSearchResults?.length}} sails.</h4>
+      <app-sail-list
+        [boats]="boats"
+        (clicked)="goToViewSail($event.id)"
+        (refreshRequest)="fetchSails(true)"
+        [sails]="sailsSearchResults"
+        (boatFetcher)="loadBoat($event)"
+        emptyMessage="No sails."
+        title="Sails"
+      ></app-sail-list>
+    </section>
+  </mat-card-content>
+</mat-card>
+
+<ng-template #sailFilter>
+  <div class="sail-filter-container">
+    <div>
+      <mat-form-field>
+        <mat-label
+          id="filterLabelName"
+          tabindex="-1"
+          aria-hidden="true"
+        >Sail name</mat-label>
+        <input
+          [(ngModel)]="nameFilter"
+          aria-labelledby="filterLabelName"
+          matInput
+          type="text"
+        >
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field>
+        <mat-label
+          aria-hidden="true"
+          id="filterLabelStatus"
+          tabindex="-1"
+        >Sail status</mat-label>
+        <select
+          aria-labelledby="filterLabelStatus"
+          matNativeControl
+          [(ngModel)]="sailStatus"
+          name="sailStatus"
+        >
+          <option
+            *ngFor="let status of sailStatusValues | keyvalue"
+            [value]="status.value"
+          >{{status.key}}</option>
+        </select>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field>
+        <mat-label
+          aria-hidden="true"
+          tabindex="-1"
+          id="filterLabelStartDate"
+        >Sail start date</mat-label>
+        <input
+          aria-labelledby="filterLabelStartDate"
+          [(ngModel)]="startFilter"
+          matInput
+          type="date"
+        >
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label
+          id="filterLabelEndDate"
+          aria-hidden="true"
+          tabindex="-1"
+        >Sail end date</mat-label>
+        <input
+          aria-labelledby="filterLabelEndDate"
+          [(ngModel)]="endFilter"
+          matInput
+          type="date"
+        >
+      </mat-form-field>
+    </div>
+    <div>
+      <form>
+        <mat-form-field>
+          <mat-label
+            aria-hidden="true"
+            id="filterLabelBoat"
+            tabindex="-1"
+          >Sail boat</mat-label>
+          <input
+            aria-labelledby="filterLabelBoat"
+            #boatFilter
+            [matAutocomplete]="autoboat"
+            matInput
+            type="text"
+            aria-autocomplete="both"
+          >
+          <mat-autocomplete
+            #autoboat="matAutocomplete"
+            (optionSelected)="boatSelect($event)"
+            autoActiveFirstOption
+            aria-live="polite"
+          >
+            <mat-option
+              aria-live="polite"
+              *ngFor="let option of availableBoats"
+              [attr.boatId]="option.id"
+              [value]="option.name"
+            >
+              {{option.name}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </form>
+      <mat-checkbox [(ngModel)]="noBoatAssigned">No boat assigned</mat-checkbox>
+    </div>
+    <div>
+      <form>
+        <mat-form-field>
+          <mat-label
+            aria-hidden="true"
+            id="filterLabelSkipper"
+            tabindex="-1"
+          >Sail skipper</mat-label>
+          <input
+            #skipperFilter
+            aria-labelledby="filterLabelSkipper"
+            [matAutocomplete]="autoskipper"
+            matInput
+            type="text"
+            aria-autocomplete="list"
+          >
+          <mat-autocomplete
+            #autoskipper="matAutocomplete"
+            (optionSelected)="skipperSelect($event)"
+            autoActiveFirstOption
+            aria-live="polite"
+          >
+            <mat-option
+              *ngFor="let option of availableSkippers"
+              [attr.skipperId]="option.id"
+              aria-live="polite"
+              [value]="option.name"
+            >
+              {{option.name}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </form>
+      <mat-checkbox [(ngModel)]="noSkipperAssigned">No skipper assigned</mat-checkbox>
+    </div>
+    <div>
+      <form>
+        <mat-form-field>
+          <mat-label
+            aria-hidden="true"
+            id="filterLabelCrew"
+            tabindex="-1"
+          >Sail crew</mat-label>
+          <input
+            aria-labelledby="filterLabelCrew"
+            #crewFilter
+            [matAutocomplete]="autocrew"
+            matInput
+            type="text"
+            aria-autocomplete="list"
+          >
+          <mat-autocomplete
+            #autocrew="matAutocomplete"
+            (optionSelected)="crewSelect($event)"
+            autoActiveFirstOption
+            aria-live="polite"
+          >
+            <mat-option
+              *ngFor="let option of availableCrew"
+              [attr.crewId]="option.id"
+              [value]="option.name"
+              aria-live="polite"
+            >
+              {{option.name}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </form>
+      <mat-checkbox [(ngModel)]="noCrewAssigned">No crew assigned</mat-checkbox>
+    </div>
+    <div>
+      <form>
+        <mat-form-field>
+          <mat-label
+            aria-hidden="true"
+            id="filterLabelPassengers"
+            tabindex="-1"
+          >Sail passengers</mat-label>
+          <input
+            #passengerFilter
+            aria-labelledby="filterLabelPassengers"
+            [matAutocomplete]="autopassenger"
+            matInput
+            type="text"
+            aria-autocomplete="list"
+          >
+          <mat-autocomplete
+            #autopassenger="matAutocomplete"
+            (optionSelected)="passengerSelect($event)"
+            autoActiveFirstOption
+            aria-live="polite"
+          >
+            <mat-option
+              *ngFor="let option of availablePassengers"
+              [attr.passengerId]="option.id"
+              aria-live="polite"
+              [value]="option.name"
+            >
+              {{option.name}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </form>
+      <mat-checkbox [(ngModel)]="noPassengersAssigned">No passengers assigned</mat-checkbox>
+    </div>
+  </div>
+</ng-template>
+<ng-template #controls>
+  <a
+    [routerLink]="CREATE_SAIL_ROUTE"
+    mat-raised-button
+    matTooltip="Click to create a new sail."
+  >New</a>
+  <a
+    [routerLink]="VIEW_SAIL_REQUESTS_ROUTE"
+    mat-raised-button
+    matTooltip="Click to sail requests page."
+  >Requests</a>
+</ng-template>

@@ -1,0 +1,14 @@
+<article aria-live="polite">
+  <h2 id="pageTitle" tabindex="0">Account Status: {{user?.profile?.status}}</h2>
+  <p>
+    <ng-container [ngSwitch]="user?.profile?.status">
+      <span *ngSwitchCase="ProfileStatus.APPROVED">Your account was approved.</span>
+      <span *ngSwitchCase="ProfileStatus.DEACTIVATED">Your account was deactivated.</span>
+      <span *ngSwitchCase="ProfileStatus.REGISTRATION">You must complete account registration by updating your profile.</span>
+      <span *ngSwitchCase="ProfileStatus.PENDING_APPROVAL">Your account is under review.</span>
+    </ng-container>
+    <span *ngIf="user?.profile?.status !== ProfileStatus.APPROVED">
+      If you have any question, please contact us.
+    </span>
+  </p>
+</article>

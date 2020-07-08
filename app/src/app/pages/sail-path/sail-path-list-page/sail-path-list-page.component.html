@@ -1,0 +1,54 @@
+<mat-card>
+  <mat-card-header>
+    <div mat-card-avatar>
+      <mat-icon>explorer</mat-icon>
+    </div>
+    <mat-card-title
+      id="pageTitle"
+      tabindex="0"
+    >{{title}}</mat-card-title>
+  </mat-card-header>
+  <mat-card-actions>
+    <ng-container
+      *ngIf="shouldShowControls"
+      [ngTemplateOutlet]="CONTROLS"
+    ></ng-container>
+  </mat-card-actions>
+  <mat-card-content>
+    <ng-container [ngTemplateOutlet]="SAIL_PATH_LIST"></ng-container>
+  </mat-card-content>
+</mat-card>
+
+<ng-template #SAIL_PATH_LIST>
+  <app-table>
+    <tr>
+      <th>Submitted By</th>
+      <th>Submitted On</th>
+      <th>Description</th>
+    </tr>
+    <tr>
+      <td
+        colspan="3"
+        *ngIf="!sailPaths || !sailPaths.length"
+      >There are no sail paths.</td>
+    </tr>
+    <tr
+      (click)="viewSailPath(sailPath.id)"
+      *ngFor="let sailPath of sailPaths;"
+      class="clickable"
+    >
+      <td>{{getProfile(sailPath.submittedBy)?.name}}</td>
+      <td>{{sailPath.submittedOn | humanDateWithTime:true}}</td>
+      <td>{{sailPath.description}}</td>
+    </tr>
+  </app-table>
+</ng-template>
+
+<ng-template #CONTROLS>
+  <button
+    *ngIf="allowCreateNewPath"
+    (click)="createNewSailPath()"
+    mat-raised-button
+    matTooltip="Click to create a new sail."
+  >New</button>
+</ng-template>

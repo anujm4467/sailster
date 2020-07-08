@@ -1,0 +1,162 @@
+<h3 *ngIf="!challenge">It looks like this challenge is missing.</h3>
+<mat-card *ngIf="challenge">
+  <mat-card-header>
+    <div mat-card-avatar>
+      <mat-icon>golf_course</mat-icon>
+    </div>
+    <mat-card-title
+      id="pageTitle"
+      role="heading"
+      tabindex="0"
+    >Challenge: {{challenge?.title}}</mat-card-title>
+    <mat-card-subtitle
+      role="heading"
+      tabindex="0"
+    >
+      Accomplished by {{challenge?.completedBy?.length}} sailors.
+    </mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-actions>
+    <ng-container *ngTemplateOutlet="CONTROLS_TEMPLATE"></ng-container>
+  </mat-card-actions>
+  <mat-card-content>
+    <ng-container *ngTemplateOutlet="CONTENT_TEMPLATE"></ng-container>
+    <ng-container *ngTemplateOutlet="PICTURES_TEMPLATE"></ng-container>
+    <ng-container *ngTemplateOutlet="COMMENTS_TEMPLATE"></ng-container>
+    <ng-container *ngTemplateOutlet="ACCOMPLISHED_BY_TEMPLATE"></ng-container>
+  </mat-card-content>
+  <mat-card-footer>
+    <ng-container *ngTemplateOutlet="FOOTER_ACTIONS_TEMPLATE"></ng-container>
+  </mat-card-footer>
+</mat-card>
+
+<ng-template #CONTROLS_TEMPLATE>
+  <a
+    (click)="editChallenge()"
+    *ngIf="canEditNewChallenge"
+    mat-raised-button
+    matTooltip="Go to edit challenge page"
+  >Edit</a>
+  <button
+    (click)="challengeAccomplished()"
+    *ngIf="!userAccompliedChallenge"
+    mat-raised-button
+    matTooltip="Click here to when you have accomplished this challenge."
+  >Accomplished</button>
+</ng-template>
+
+<ng-template #FOOTER_ACTIONS_TEMPLATE>
+  <mat-action-row>
+    <button
+      (click)="save()"
+      *ngIf="shouldAllowSaveButton"
+      mat-raised-button
+    >Save</button>
+    <button
+      (click)="challengeAccomplished()"
+      *ngIf="!userAccompliedChallenge"
+      mat-raised-button
+      matTooltip="Click here to when you have accomplished this challenge."
+    >Accomplished</button>
+  </mat-action-row>
+</ng-template>
+
+<ng-template #CONTENT_TEMPLATE>
+  <h3 tabindex="0">Challenge Details:</h3>
+  <pre>{{challenge?.description}}</pre>
+</ng-template>
+
+<ng-template #PICTURES_TEMPLATE>
+  <mat-accordion>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>Pictures</mat-expansion-panel-header>
+      <div>
+        <mat-slide-toggle
+          color="warn"
+          [(ngModel)]="allowDelete"
+        >Delete Mode</mat-slide-toggle>
+      </div>
+      <app-image-list
+        (deleteClick)="deletePicture($event)"
+        (goToProfile)="showProfileDialog(getProfile($event))"
+        (profileFetcher)="getProfile($event)"
+        [allowDelete]="allowDelete"
+        [pictures]="challenge?.pictures"
+        [profiles]="profiles"
+        [showAuthor]="true"
+        [user]="user"
+      ></app-image-list>
+      <app-image-form
+        (deleteClick)="deleteCDNFile($event)"
+        [allowComments]="true"
+        [form]="picturesForm"
+        controlArrayName="pictures"
+      ></app-image-form>
+      <app-file-select
+        (action)="uploadNewPicture($event)"
+        [id]="challengePictureInput"
+        [multiple]="false"
+        [progress]="uploadProgress"
+        actionDescription="Upload pictures of you doing the challenge"
+        actionName="Upload"
+        fileFilter="image/*"
+        title="Upload pictures of your doing the challenge"
+      ></app-file-select>
+      <mat-action-row>
+        <button
+          (click)="save()"
+          *ngIf="shouldAllowSaveButton"
+          mat-raised-button
+        >Post pictures</button>
+      </mat-action-row>
+    </mat-expansion-panel>
+  </mat-accordion>
+</ng-template>
+
+<ng-template #COMMENTS_TEMPLATE>
+  <mat-accordion>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>Comments</mat-panel-title>
+      </mat-expansion-panel-header>
+      <app-comment-list
+        (profileClick)="showProfileDialog($event, ($event)?.roles)"
+        (profileFetcher)="fetchProfile($event)"
+        [comments]="challenge?.comments"
+        [profiles]="profiles"
+      ></app-comment-list>
+      <app-new-comment-form
+        (postNewComment)="postNewComment($event)"
+        [currentUser]="user"
+      ></app-new-comment-form>
+    </mat-expansion-panel>
+  </mat-accordion>
+</ng-template>
+
+<ng-template #ACCOMPLISHED_BY_TEMPLATE>
+  <mat-accordion *ngIf="canViewAccomplishedBy">
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>Accomplished By</mat-panel-title>
+      </mat-expansion-panel-header>
+      <mat-list role="list">
+        <mat-list-item
+          (click)="showProfileDialog(getProfile(challenger.profile))"
+          *ngFor="let challenger of challenge?.completedBy; let i = index;"
+          attr.aria-label="{{i+1}} of {{challenge?.completedBy?.length}}. {{getProfile(challenger.profile)?.name}} {{challenger.completedOn | humanDateWithTime}}"
+          class="clickable"
+          role="option"
+          tabindex="0"
+        >
+          <div
+            aria-hidden="true"
+            class="accomplist-by-list-item"
+          >
+            <app-profile-bullet [profile]="getProfile(challenger.profile)"></app-profile-bullet>
+            <span>{{challenger.completedOn | humanDateWithTime}}</span>
+          </div>
+        </mat-list-item>
+      </mat-list>
+    </mat-expansion-panel>
+  </mat-accordion>
+</ng-template>

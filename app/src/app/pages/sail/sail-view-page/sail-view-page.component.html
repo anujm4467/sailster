@@ -1,0 +1,504 @@
+<h3 *ngIf="sail === null">Looks like this sail does not exist.</h3>
+<mat-card *ngIf="sail && user">
+  <mat-card-header>
+    <div mat-card-avatar>
+      <mat-icon>cloud_queue</mat-icon>
+    </div>
+    <mat-card-title
+      id="pageTitle"
+      tabindex="0"
+      role="heading"
+    >
+      Sails: {{sail?.name}}
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-actions>
+    <ng-container [ngTemplateOutlet]="controls"></ng-container>
+  </mat-card-actions>
+  <mat-card-content>
+    <ng-container [ngTemplateOutlet]="sailContent"></ng-container>
+    <ng-container [ngTemplateOutlet]="COMMENTS_TEMPLATE"></ng-container>
+    <ng-container [ngTemplateOutlet]="NEW_COMMENTS_TEMPLATE"></ng-container>
+  </mat-card-content>
+  <mat-card-footer>
+    <mat-card-actions *ngIf="canJoinSail">
+      <button
+        (click)="joinSailAsPassenger()"
+        *ngIf="canJoinPassenger"
+        mat-raised-button
+      >Join As Passenger</button>
+      <button
+        (click)="joinSailAsCrew()"
+        *ngIf="canJoinCrew"
+        mat-raised-button
+      >Join As Crew</button>
+      <button
+        (click)="joinSailAsSkipper()"
+        *ngIf="canJoinSkipper"
+        mat-raised-button
+      >Join As Skipper</button>
+    </mat-card-actions>
+  </mat-card-footer>
+</mat-card>
+<ng-template #controls>
+  <a
+    *ngIf="canEditSail"
+    [routerLink]="editSailLink(sail.id)"
+    mat-raised-button
+    matTooltip="Go to sail edit page"
+  >Edit</a>
+  <button
+    (click)="startSail()"
+    *ngIf="canStartSail"
+    mat-raised-button
+    matTooltip="Start this sail"
+  >Start</button>
+  <button
+    (click)="endSail()"
+    *ngIf="canEndSail"
+    mat-raised-button
+    matTooltip="End this sail"
+  >End</button>
+  <button
+    (click)="leaveSail()"
+    *ngIf="canLeaveSail"
+    mat-raised-button
+    matTooltip="Leave this sail"
+  >Leave</button>
+  <a
+    (click)="cancelSail()"
+    *ngIf="canCancelSail"
+    mat-raised-button
+    matTooltip="Cancel this sail"
+  >Cancel</a>
+  <a
+    *ngIf="canViewChecklist"
+    [routerLink]="viewSailchecklistRouteLink"
+    mat-raised-button
+    matTooltip="Go to sail's checklist page"
+  >Checklist</a>
+  <a
+    *ngIf="canViewFeedback"
+    [routerLink]="viewSailFeedbackRouteLink"
+    mat-raised-button
+    matTooltip="Go to sail's feedback page"
+  >Feedback</a>
+  <a
+    *ngIf="canViewSailPaths"
+    [routerLink]="viewSailPathsRouteLink"
+    mat-raised-button
+    matTooltip="Go to sail's sail paths page"
+  >Paths</a>
+  <a
+    (click)="goToSailPicturesPage()"
+    mat-raised-button
+    matTooltip="Go to sail's pictures page"
+  >Pictures</a>
+
+</ng-template>
+<ng-template #sailContent>
+  <app-table>
+    <tbody role="list">
+      <tr
+        aria-label="Sail start"
+        matTooltip="This sail starts {{sail.start | humanDateWithTime}}"
+        tabindex="0"
+        role="option"
+      >
+        <th
+          aria-hidden="true"
+          tabindex="-1"
+        >Start</th>
+        <td
+          aria-hidden="true"
+          tabindex="-1"
+        >{{sail.start | humanDateWithTime:true}}</td>
+      </tr>
+      <tr
+        aria-label="Sail end"
+        matTooltip="This sail ends {{sail.end | humanDateWithTime}}"
+        tabindex="0"
+        role="option"
+      >
+        <th
+          aria-hidden="true"
+          tabindex="-1"
+        >End</th>
+        <td
+          aria-hidden="true"
+          tabindex="-1"
+        >{{sail.end | humanDateWithTime:true}}</td>
+      </tr>
+      <tr
+        aria-label="Sail duration"
+        matTooltip="This sail's duration is {{sail.start | duration: sail.end}}"
+        tabindex="0"
+        role="option"
+      >
+        <th
+          aria-hidden="true"
+          tabindex="-1"
+        >Duration</th>
+        <td
+          aria-hidden="true"
+          tabindex="-1"
+        >
+          {{sail.start | duration: sail.end}}
+        </td>
+      </tr>
+      <tr
+        aria-label="Sail status"
+        matTooltip="This sail's status is {{sail.status}}"
+        tabindex="0"
+        role="option"
+      >
+        <th
+          aria-hidden="true"
+          tabindex="-1"
+        >Status</th>
+        <td
+          aria-hidden="true"
+          tabindex="-1"
+        >{{sail.status}}</td>
+      </tr>
+      <ng-container *ngIf="isSailCancelled">
+        <tr
+          class="table-spacer"
+          aria-hidden="true"
+          tabindex="-1"
+        >
+          <td
+            colspan="2"
+            aria-hidden="true"
+            tabindex="-1"
+          ></td>
+        </tr>
+        <tr
+          aria-hidden="true"
+          tabindex="-1"
+        >
+          <th
+            colspan="2"
+            aria-hidden="true"
+            tabindex="-1"
+          >Cancelation Details</th>
+        </tr>
+        <tr
+          aria-label="Cancel date"
+          matTooltip="This sail was cancelled {{(sail.cancelledOn | humanDateWithTime)}}"
+          tabindex="0"
+          role="option"
+        >
+          <th
+            aria-hidden="true"
+            tabindex="-1"
+          >Cancelled On</th>
+          <td
+            aria-hidden="true"
+            tabindex="-1"
+          >{{sail.cancelledOn | humanDateWithTime:true}}</td>
+        </tr>
+        <tr
+          (click)="showProfileDialog(getProfile(sail.cancelledBy), 'sail canceller')"
+          (keyup.enter)="showProfileDialog(getProfile(sail.cancelledBy), 'sail canceller')"
+          aria-label="Cancelled by"
+          class="clickable"
+          matTooltip="This sail was cancelled by {{getProfile(sail.cancelledBy)?.name}}. Click to open profile dialog."
+          tabindex="0"
+          role="option"
+        >
+          <th
+            aria-hidden="true"
+            tabindex="-1"
+          >Cancelled By</th>
+          <td
+            aria-hidden="true"
+            tabindex="-1"
+          >
+            <app-profile-bullet [profile]="getProfile(sail.cancelledBy)"></app-profile-bullet>
+          </td>
+        </tr>
+        <tr>
+          <th
+            colspan="2"
+            aria-hidden="true"
+            tabindex="-1"
+          >Cancellation Reason</th>
+        </tr>
+        <tr
+          aria-label="Cancellation reason"
+          matTooltip="This sail was cancelled because {{sail.cancelReason || 'no one knows.'}}"
+          tabindex="0"
+          role="option"
+        >
+          <td
+            class="table-description"
+            colspan="2"
+            aria-hidden="true"
+            tabindex="-1"
+          >{{sail.cancelReason}}</td>
+        </tr>
+      </ng-container>
+      <tr
+        class="table-spacer"
+        aria-hidden="true"
+        tabindex="-1"
+      >
+        <td
+          colspan="2"
+          aria-hidden="true"
+          tabindex="-1"
+        ></td>
+      </tr>
+      <tr
+        *ngIf="!sail.boat"
+        aria-label="Sail boat"
+        matTooltip="Sail boat is not assigned"
+        tabindex="0"
+        role="option"
+      >
+        <th
+          tabindex="-1"
+          aria-hidden="true"
+        >Boat</th>
+        <td
+          aria-hidden="true"
+          tabindex="-1"
+        >-empty-</td>
+      </tr>
+      <tr
+        *ngIf="sail.boat && getBoat(sail.boat) === null"
+        aria-label="Sail boat"
+        matTooltip="Sail boat cannot be resolved."
+        tabindex="0"
+        role="option"
+      >
+        <th
+          tabindex="-1"
+          aria-hidden="true"
+        >Boat</th>
+        <td
+          aria-hidden="true"
+          tabindex="-1"
+        >Error: resolving boat</td>
+      </tr>
+      <tr
+        (click)="showBoatDialog(getBoat(sail.boat), 'Boat')"
+        (keyup.enter)="showBoatDialog(getBoat(sail.boat), 'Boat')"
+        *ngIf="sail.boat"
+        aria-label="Sail boat"
+        class="clickable"
+        matTooltip="Sail boat is {{getBoat(sail.boat)?.name}}. Click to open boat details dialog."
+        tabindex="0"
+        role="option"
+      >
+        <th
+          tabindex="-1"
+          aria-hidden="true"
+        >Boat</th>
+        <td
+          aria-hidden="true"
+          tabindex="-1"
+        >{{getBoat(sail.boat)?.name}}</td>
+      </tr>
+      <tr
+        (click)="showProfileDialog(getProfile(sail.skipper), 'skipper')"
+        (keyup.enter)="showProfileDialog(getProfile(sail.skipper), 'skipper')"
+        *ngIf="sail.skipper"
+        aria-label="Sail's skipper"
+        class="clickable"
+        matTooltip="Sail's skipper is {{getProfile(sail.skipper)?.name}}. Click to open profile dialog."
+        tabindex="0"
+        role="option"
+      >
+        <th
+          aria-hidden="true"
+          tabindex="-1"
+        >Skipper</th>
+        <td
+          aria-hidden="true"
+          tabindex="-1"
+        >
+          <app-profile-bullet [profile]="getProfile(sail.skipper)"></app-profile-bullet>
+        </td>
+      </tr>
+      <tr
+        *ngIf="!sail.skipper"
+        aria-label="Sail's skipper"
+        matTooltip="Sail's skipper is not assigned."
+        tabindex="0"
+        role="option"
+      >
+        <th
+          aria-hidden="true"
+          tabindex="-1"
+        >Skipper</th>
+        <td
+          aria-hidden="true"
+          tabindex="-1"
+        >-empty-</td>
+      </tr>
+      <tr
+        *ngIf="sail.skipper && getProfile(sail.skipper) === null"
+        aria-label="Sail's skipper"
+        matTooltip="Sail's skipper cannot be resolved."
+        tabindex="0"
+        role="option"
+      >
+        <th
+          aria-hidden="true"
+          tabindex="-1"
+        >Skipper</th>
+        <td
+          aria-hidden="true"
+          tabindex="-1"
+        >Error: resolving skipper</td>
+      </tr>
+      <tr
+        (click)="showProfileDialog(getProfile(sail.crew), 'crew')"
+        (keyup.enter)="showProfileDialog(getProfile(sail.crew), 'crew')"
+        *ngIf="sail.crew"
+        class="clickable"
+        aria-label="Sail's crew"
+        class="clickable"
+        matTooltip="Sail's crew is {{getProfile(sail.crew)?.name}}. Click to open profile dialog."
+        tabindex="0"
+        role="option"
+      >
+        <th
+          aria-hidden="true"
+          tabindex="-1"
+        >Crew</th>
+        <td
+          aria-hidden="true"
+          tabindex="-1"
+        >
+          <app-profile-bullet [profile]="getProfile(sail.crew)"></app-profile-bullet>
+        </td>
+      </tr>
+      <tr
+        *ngIf="!sail.crew"
+        aria-label="Sail's crew"
+        matTooltip="Sail's crew is not assigned."
+        tabindex="0"
+        role="option"
+      >
+        <th
+          aria-hidden="true"
+          tabindex="-1"
+        >Crew</th>
+        <td
+          aria-hidden="true"
+          tabindex="-1"
+        >-empty-</td>
+      </tr>
+      <tr
+        *ngIf="sail.crew && getProfile(sail.crew) === null"
+        aria-label="Sail's crew"
+        matTooltip="Sail's crew cannot be resolved."
+        tabindex="0"
+        role="option"
+      >
+        <th
+          aria-hidden="true"
+          tabindex="-1"
+        >Crew</th>
+        <td
+          aria-hidden="true"
+          tabindex="-1"
+        >Error: resolving crew</td>
+      </tr>
+      <tr
+        class="table-spacer"
+        aria-hidden="true"
+        tabindex="-1"
+      >
+        <td
+          colspan="2"
+          aria-hidden="true"
+          tabindex="-1"
+        ></td>
+      </tr>
+      <tr role="list">
+        <th
+          [attr.rowspan]="((sail.maxOccupancy || 6) - 1)"
+          aria-hidden="true"
+          tabindex="-1"
+        >Passengers</th>
+      </tr>
+      <tr
+        (click)="!!sailPassengers[i] && showProfileDialog(getProfile(sailPassengers[i]), 'passenger')"
+        (keyup.enter)="!!sailPassengers[i] && showProfileDialog(getProfile(sailPassengers[i]), 'passenger')"
+        *ngFor="let unusedvariable of passengerSpots; let i = index;"
+        [matTooltip]="getPassengerLabel(i)"
+        attr.aria-label="Sail passenger {{i + 1}} of {{passengerSpots.length}}"
+        role="option"
+        tabindex="0"
+      >
+        <td
+          *ngIf="sailPassengers[i]"
+          class="clickable"
+          colspan="2"
+          aria-hidden="true"
+          tabindex="-1"
+        >
+          <app-profile-bullet [profile]="getProfile(sailPassengers[i])"></app-profile-bullet>
+        </td>
+        <td
+          colspan="2"
+          *ngIf="!sailPassengers[i]"
+          aria-hidden="true"
+          tabindex="-1"
+        >-empty-</td>
+      </tr>
+      <tr
+        class="table-spacer"
+        aria-hidden="true"
+        tabindex="-1"
+      >
+        <td
+          colspan="2"
+          aria-hidden="true"
+          tabindex="-1"
+        ></td>
+      </tr>
+      <tr>
+      <tr>
+        <th
+          colspan="2"
+          aria-hidden="true"
+          tabindex="-1"
+        >About This Sail</th>
+      </tr>
+      <tr
+        aria-label="Additional information"
+        matTooltip="Sail's additional info {{sail.description || 'none'}}"
+        tabindex="0"
+        role="option"
+      >
+        <td
+          class="table-description"
+          colspan="2"
+          aria-hidden="true"
+          tabindex="-1"
+        >{{sail.description}}</td>
+      </tr>
+    </tbody>
+  </app-table>
+</ng-template>
+
+<ng-template #COMMENTS_TEMPLATE>
+  <app-comment-list
+    (profileClick)="showProfileDialog($event, ($event)?.roles)"
+    (profileFetcher)="fetchProfile($event)"
+    [comments]="sail?.comments"
+    [profiles]="profiles"
+  ></app-comment-list>
+</ng-template>
+
+<ng-template #NEW_COMMENTS_TEMPLATE>
+  <app-new-comment-form
+    [currentUser]="user"
+    (postNewComment)="postNewComment($event)"
+  ></app-new-comment-form>
+</ng-template>

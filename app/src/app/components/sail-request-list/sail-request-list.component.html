@@ -1,0 +1,111 @@
+<mat-accordion>
+  <mat-expansion-panel *ngFor="let request of sailRequests; let i = index;">
+    <mat-expansion-panel-header
+      attr.aria-label="Sail request {{i + 1}} of {{sailRequests.length}}"
+      matTooltip="{{i + 1}}. Request description: {{request.description}}; Request status: {{request.status}}."
+    >
+      <mat-panel-title>
+        {{i + 1}}. {{request.start | humanDate:true}}
+      </mat-panel-title>
+      <mat-panel-description>
+        {{request.status}}
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <app-table>
+      <tr
+        tabindex="0"
+        role="option"
+        attr.aria-label="Request status {{request.status}}"
+      >
+        <th
+          aria-hidden="true"
+          tabindex="-1"
+        >Request Status</th>
+        <td
+          tabindex="-1"
+          aria-hidden="true"
+        >{{request.status}}</td>
+      </tr>
+      <tr
+        (click)="showProfileDialog(getProfile(request.by), getProfile(request.by)?.roles)"
+        attr.aria-label="Requested by {{getProfile(request.by)?.name}}"
+        class="clickable"
+        role="option"
+        tabindex="0"
+      >
+        <th
+          aria-hidden="true"
+          tabindex="-1"
+        >Requested by</th>
+        <td
+          aria-hidden="true"
+          tabindex="-1"
+        ><app-profile-bullet [profile]="getProfile(request.by)"></app-profile-bullet></td>
+      </tr>
+      <tr
+        tabindex="0"
+        role="option"
+        attr.aria-label="Sail start date {{request.start | humanDate}}"
+      >
+        <th
+          aria-hidden="true"
+          tabindex="-1"
+        >Sail start date</th>
+        <td
+          aria-hidden="true"
+          tabindex="-1"
+        >{{request.start | humanDate}}</td>
+      </tr>
+      <tr
+        tabindex="0"
+        role="option"
+        attr.aria-label="Sail end date {{request.end | humanDate}}"
+      >
+        <th
+          aria-hidden="true"
+          tabindex="-1"
+        >Sail end date</th>
+        <td
+          aria-hidden="true"
+          tabindex="-1"
+        >{{request.end | humanDate}}</td>
+      </tr>
+      <tr
+        role="option"
+        tabindex="0"
+        attr.aria-label="Request description {{request.description}}"
+      >
+        <th
+          aria-hidden="true"
+          tabindex="-1"
+          colspan="2"
+        >Request description</th>
+      </tr>
+      <tr
+        tabindex="-1"
+        aria-hidden="true"
+      >
+        <td
+          aria-label="Sail Request Description"
+          colspan="2"
+          matTooltip="Description: {{request.description}}"
+          tabindex="0"
+        >{{request.description}}</td>
+      </tr>
+    </app-table>
+    <mat-action-row>
+      <a
+        *ngIf="canEditRequest(request)"
+        (click)="editSailRequest.emit(request.id)"
+        mat-raised-button
+        matTooltip="Edit sail request {{i + 1}}"
+      >Edit</a>
+      <button
+        (click)="cancelSailRequest.emit(request.id)"
+        *ngIf="canCancelRequest(request)"
+        mat-raised-button
+        matTooltip="Cancel sail request {{i + 1}}"
+      >Cancel</button>
+    </mat-action-row>
+  </mat-expansion-panel>
+</mat-accordion>

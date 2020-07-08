@@ -1,0 +1,180 @@
+<app-table *ngIf="boat">
+  <tr
+    tabindex="0"
+    role="option"
+    attr.aria-label="Boat name {{boat.name}}"
+  >
+    <th
+      tabindex="-1"
+      aria-hidden="true"
+    >Name</th>
+    <td
+      tabindex="-1"
+      aria-hidden="true"
+    >{{boat.name}}</td>
+  </tr>
+  <tr
+    tabindex="0"
+    role="option"
+    attr.aria-label="Boat status {{boat.status}}"
+  >
+    <th
+      tabindex="-1"
+      aria-hidden="true"
+    >Status</th>
+    <td
+      tabindex="-1"
+      aria-hidden="true"
+    >{{boat.status}}</td>
+  </tr>
+  <tr
+    tabindex="0"
+    role="option"
+    attr.aria-label="Boat max occupancy {{boat.maxOccupancy}}"
+  >
+    <th
+      tabindex="-1"
+      aria-hidden="true"
+    >Max Occupancy</th>
+    <td
+      tabindex="-1"
+      aria-hidden="true"
+    >{{boat.maxOccupancy}}</td>
+  </tr>
+  <tr
+    tabindex="0"
+    role="option"
+    attr.aria-label="Boat model {{boat.model || 'Not provided'}}"
+  >
+    <th
+      tabindex="-1"
+      aria-hidden="true"
+    >Model</th>
+    <td
+      tabindex="-1"
+      aria-hidden="true"
+    >{{boat.model || 'Not provided'}}</td>
+  </tr>
+  <tr
+    (click)="wikiLink?.click()"
+    tabindex="0"
+    role="option"
+    attr.aria-label="Boat wiki page {{boat.wiki}}"
+  >
+    <th
+      tabindex="-1"
+      aria-hidden="true"
+    >Wiki</th>
+    <td
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      <a
+        *ngIf="boat.wiki"
+        target="_blank"
+        #wikiLink
+        href={{boat.wiki}}
+      >{{boat.wiki}}</a>
+      {{!boat.wiki ? "Not provided": ""}}
+    </td>
+  </tr>
+  <tr
+    tabindex="-1"
+    aria-hidden="true"
+  >
+    <td colspan="2">Hull</td>
+  </tr>
+  <tr
+    tabindex="0"
+    role="option"
+    attr.aria-label="Hull type {{boat.hull.hullType}}"
+  >
+    <th
+      tabindex="-1"
+      aria-hidden="true"
+    >Type</th>
+    <td
+      tabindex="-1"
+      aria-hidden="true"
+    >{{boat.hull?.hullType}}</td>
+  </tr>
+  <tr
+    tabindex="0"
+    role="option"
+    attr.aria-label="Hull draft {{boat.hull.draft}}"
+  >
+    <th
+      tabindex="-1"
+      aria-hidden="true"
+    >Draft</th>
+    <td
+      tabindex="-1"
+      aria-hidden="true"
+    >{{boat.hull?.draft}}</td>
+  </tr>
+  <tr
+    tabindex="0"
+    role="option"
+    attr.aria-label="Hull beam {{boat.hull.beam}}"
+  >
+    <th
+      tabindex="-1"
+      aria-hidden="true"
+    >Beam</th>
+    <td
+      tabindex="-1"
+      aria-hidden="true"
+    >{{boat.hull?.beam}}</td>
+  </tr>
+  <tr
+    tabindex="0"
+    role="option"
+    attr.aria-label="Hull length overall {{boat.hull.loa}}"
+  >
+    <th
+      tabindex="-1"
+      aria-hidden="true"
+    >Length overall</th>
+    <td
+      tabindex="-1"
+      aria-hidden="true"
+    >{{boat.hull?.loa}}</td>
+  </tr>
+  <tr
+    tabindex="0"
+    role="option"
+    attr.aria-label="Hull length waterline {{boat.hull.lwl}}"
+  >
+    <th
+      tabindex="-1"
+      aria-hidden="true"
+    >Length waterline</th>
+    <td
+      tabindex="-1"
+      aria-hidden="true"
+    >{{boat.hull?.lwl}}</td>
+  </tr>
+  <tr
+    tabindex="0"
+    role="option"
+    attr.aria-label="Hull construction {{boat.hull.construction}}"
+  >
+    <th
+      tabindex="-1"
+      aria-hidden="true"
+    >Construction</th>
+    <td
+      tabindex="-1"
+      aria-hidden="true"
+    >{{boat.hull?.construction}}</td>
+  </tr>
+  <tr
+    *ngIf="showPictures && boat.pictures && boat.pictures.length"
+    tabindex="-1"
+    aria-hidden="true"
+  >
+    <td colspan="2">
+      <app-image-list [pictures]="boat.pictures"></app-image-list>
+    </td>
+  </tr>
+</app-table>

@@ -1,0 +1,30 @@
+<mat-card>
+  <mat-card-header>
+    <div mat-card-avatar>
+      <mat-icon>playlist_add_check</mat-icon>
+    </div>
+    <mat-card-title
+      id="pageTitle"
+      role="heading"
+      tabindex="0"
+    >Checklists for {{boatName}}</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <p *ngIf="!checklists.length">There are no checklist.</p>
+    <mat-accordion>
+      <mat-expansion-panel *ngFor="let checklist of checklists; let i = index;">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <h4 tabindex="0">Checklist {{i + 1}} of {{checklists.length}}: {{formatDate(checklist.sailStart)}}</h4>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <app-checklist-summary
+          (sailFetcher)="getSail($event)"
+          (sailViewer)="viewSail($event)"
+          [checklist]="checklist"
+          [sails]="sails"
+        ></app-checklist-summary>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </mat-card-content>
+</mat-card>
