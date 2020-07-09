@@ -338,7 +338,7 @@ export class EmailUtils {
         this.ADMIN_EMAIL,
         'New account awaiting approval',
         `${profileName} is awating for profile review.
-       Go to ${DOMAIN}/admin to review their profile.`,
+       Go to ${this.DOMAIN}/admin to review their profile.`,
       );
   }
 
@@ -349,8 +349,8 @@ export class EmailUtils {
         this.ADMIN_EMAIL,
         'Your profile was approved',
         `Your profile was approved.
-       You now have access to ${DOMAIN}.
-       Go to ${DOMAIN}/login to log in.`,
+       You now have access to ${this.DOMAIN}.
+       Go to ${this.DOMAIN}/login to log in.`,
       );
   }
 }

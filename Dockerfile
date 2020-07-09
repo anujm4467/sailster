@@ -1,6 +1,5 @@
 FROM node:12.13.0-alpine
-COPY ./app/app /app
-COPY ./api/api /api
-COPY ./docs /docs
-COPY ./start-servers.sh ./start-servers.sh
+WORKDIR /app_root
+COPY . .
+RUN chmod +x ./build-docker.sh && ./build-docker.sh && rm -rf ./build-docker.sh
 CMD ["./start-servers.sh"]
