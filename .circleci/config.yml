@@ -10,9 +10,6 @@ jobs:
       - checkout
 
       - run:
-            command: apk add docker
-
-      - run:
           command: ls
 
       # BUILD APP
@@ -22,9 +19,9 @@ jobs:
           working_directory: app
 
       - run:
-        name: Lint App
-        command: yarn lint
-        working_directory: app
+          name: Lint App
+          command: yarn lint
+          working_directory: app
 
       - run:
           name: Test App
@@ -42,9 +39,9 @@ jobs:
           working_directory: api
 
       - run:
-        name: Lint API
-        command: yarn lint
-        working_directory: api
+          name: Lint API
+          command: yarn lint
+          working_directory: api
 
       - run:
           command: yarn build
