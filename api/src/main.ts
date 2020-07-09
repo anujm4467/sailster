@@ -1,5 +1,6 @@
 
-require('dotenv').config();
+import dotenv = require('dotenv');
+dotenv.config();
 import { NestFactory } from '@nestjs/core';
 import * as Sentry from '@sentry/node';
 import { AppModule } from './app.module';
