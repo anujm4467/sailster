@@ -15,8 +15,8 @@ export class FirebaseAdminService {
 
   constructor() {
 
-    const serviceAccount = process.env.GFB_service_account ?
-      JSON.parse(process.env.GFB_service_account) :
+    const serviceAccount = process.env.FIREBASE_ADMIN_SDK_JSON ?
+      JSON.parse(process.env.FIREBASE_ADMIN_SDK_JSON) :
       require(process.env.FIREBASE_ADMIN_SDK_ACCOUNT_FILE);
 
     this.firebaseAdmin = admin
