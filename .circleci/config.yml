@@ -24,12 +24,25 @@ jobs:
           working_directory: app
 
       - run:
+          name: Setup Code Climate test-reporter
+          command: |
+             curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+             chmod +x ./cc-test-reporter
+             ./cc-test-reporter before-build
+          working_directory: app
+
+      - run:
           name: Test App
           command: yarn test
           working_directory: app
 
       - store_test_results:
-          path: flower-shop-app/test-results
+          path: app/test-results
+
+      - run:
+         name: Send coverage report to Code Climate
+         command: ./cc-test-reporter after-build -t lcov
+         working_directory: app
 
       - run:
           command: yarn build

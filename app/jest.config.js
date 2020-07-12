@@ -1,5 +1,15 @@
 module.exports = {
   collectCoverage: true,
+  reporters: [
+    'default',
+    [
+      'jest-junit',
+      {
+        "outputDirectory": "./test-results/jest",
+        "outputName": "results.xml",
+      },
+    ],
+  ],
   moduleNameMapper: {
     "\\.(jpg|jpeg|png)$": "<rootDir>/__mocks__/image.js",
     "^@lib/(.*)$": "<rootDir>/src/lib/$1",
