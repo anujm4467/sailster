@@ -9,6 +9,9 @@ const port = process.env.PORT || 4000;
 const API_HOST = 'http://localhost:3000';
 const CDN_HOST = 'http://localhost:3000';
 
+console.log(`${__dirname}docs/app`);
+console.log(`${__dirname}docs/api`);
+
 // Express
 const bodyParser = require('body-parser');
 const compression = require('compression');
@@ -100,8 +103,8 @@ app
     }
   }))
   // DOCUMENTATION
-  .use('/docs/app', express.static('/docs/app'))
-  .use('/docs/api', express.static('/docs/api'))
+  .use('/docs/app', express.static(`${__dirname}docs/app`))
+  .use('/docs/api', express.static(`${__dirname}docs/api`))
   // Static content
   .use(express.static(DIST_DIR))
   // for everything else serve index.html
