@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "",
   "author": "",
-  "license": "PRIVATE",
+  "license": "MIT",
   "scripts": {
     "build": "yarn build:api && yarn build:docs",
     "build:api": "tsc -p tsconfig.build.json",
