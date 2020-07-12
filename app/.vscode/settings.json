@@ -34,5 +34,8 @@
   "html.format.maxPreserveNewLines": 1,
   "html.format.wrapAttributes": "force-expand-multiline",
   "files.trimTrailingWhitespace": true,
-  "typescript.tsdk": "node_modules\\typescript\\lib"
+  "typescript.tsdk": "node_modules\\typescript\\lib",
+  "[markdown]": {
+    "files.trimTrailingWhitespace": false
+  }
 }

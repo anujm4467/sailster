@@ -100,8 +100,8 @@ app
     }
   }))
   // DOCUMENTATION
-  .use('/docs/app', express.static('../docs/app'))
-  .use('/docs/api', express.static('../docs/api'))
+  .use('/docs/app', express.static('/docs/app'))
+  .use('/docs/api', express.static('/docs/api'))
   // Static content
   .use(express.static(DIST_DIR))
   // for everything else serve index.html
