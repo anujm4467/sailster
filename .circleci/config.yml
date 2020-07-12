@@ -28,6 +28,9 @@ jobs:
           command: yarn test
           working_directory: app
 
+      - store_test_results:
+          path: flower-shop-app/test-results
+
       - run:
           command: yarn build
           working_directory: app
