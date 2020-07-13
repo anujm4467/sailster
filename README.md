@@ -1,5 +1,8 @@
-# sailing
+# Sail Club Management Web App
 
-[![CircleCI](https://circleci.com/gh/ogiexela/bsc-sailing/tree/master.svg?style=svg&circle-token=2ef70874e25ed8c44af347474a7f8a93184fc2d2)](https://circleci.com/gh/ogiexela/bsc-sailing/tree/master)
+[![CircleCI](https://circleci.com/gh/Blind-Sailing-Canada/sailster/tree/dev.svg?style=shield)](https://circleci.com/gh/Blind-Sailing-Canada/sailster/tree/dev)
+[![Maintainability](https://api.codeclimate.com/v1/badges/3f5f2e80a0814fca1b93/maintainability)](https://codeclimate.com/github/Blind-Sailing-Canada/sailster/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/3f5f2e80a0814fca1b93/test_coverage)](https://codeclimate.com/github/Blind-Sailing-Canada/sailster/test_coverage)
 
-Yay
+Frontend: https://github.com/Blind-Sailing-Canada/sailster/tree/dev/app  
+Backend: https://github.com/Blind-Sailing-Canada/sailster/tree/dev/api
