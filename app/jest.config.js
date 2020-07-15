@@ -1,5 +1,8 @@
 module.exports = {
   collectCoverage: true,
+  collectCoverageFrom: [
+    'src/**/*.{js,ts}',
+  ],
   reporters: [
     'default',
     [
