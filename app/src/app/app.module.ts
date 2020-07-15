@@ -38,7 +38,8 @@ export const REDUCER_TOKEN = new InjectionToken<ActionReducerMap<any>>(
 );
 
 Sentry.init({
-  dsn: 'https://69bf24c9d13c40f6b25fb443b21b8f17@sentry.io/2921873',
+  // THIS IS REPLCED WITH ACTUAL VALUE BY start-servers.sh
+  dsn: '{SENTRY_DSN}',
 });
 
 Sentry.captureEvent({ level: Sentry.Severity.Info, message: 'Sentry initialized in app.module.ts' });
