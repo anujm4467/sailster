@@ -11,8 +11,8 @@ ls app
 
 echo "SENTRY_DSN: ${SENTRY_DSN}"
 
-sed -i "s/SENTRY_DSN/${SENTRY_DSN}/g" ./app/*.js
-sed -i "s/SENTRY_DSN/${SENTRY_DSN}/g" ./app/*.js.map
+sed -i "s|SENTRY_DSN|${SENTRY_DSN}|g" ./app/*.js
+sed -i "s|SENTRY_DSN|${SENTRY_DSN}|g" ./app/*.js.map
 
 node ./api/main.js&
 node ./app/server/server.js
