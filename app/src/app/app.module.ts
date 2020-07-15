@@ -39,7 +39,7 @@ export const REDUCER_TOKEN = new InjectionToken<ActionReducerMap<any>>(
 
 Sentry.init({
   // THIS IS REPLCED WITH ACTUAL VALUE BY start-servers.sh
-  dsn: '{SENTRY_DSN}',
+  dsn: 'SENTRY_DSN',
 });
 
 Sentry.captureEvent({ level: Sentry.Severity.Info, message: 'Sentry initialized in app.module.ts' });
