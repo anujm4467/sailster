@@ -39,6 +39,9 @@ jobs:
       - store_test_results:
           path: app/test-results
 
+      - store_artifacts:
+          path: app/test-results
+
       - run:
          name: Send coverage report to Code Climate
          command: ./cc-test-reporter after-build -t lcov
