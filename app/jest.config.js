@@ -2,6 +2,7 @@ module.exports = {
   collectCoverage: true,
   collectCoverageFrom: [
     'src/**/*.{js,ts}',
+    '!**/node_modules/**',
   ],
   reporters: [
     'default',
