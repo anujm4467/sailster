@@ -1,4 +1,5 @@
 module.exports = {
+  maxWorkers: 2,
   collectCoverage: true,
   collectCoverageFrom: [
     'src/**/*.{js,ts}',
