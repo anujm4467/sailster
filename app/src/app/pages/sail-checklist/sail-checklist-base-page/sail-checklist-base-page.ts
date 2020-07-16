@@ -132,7 +132,7 @@ export class SailChecklistBasePageComponent extends BasePageComponent implements
     }
 
     const boatId = checklist.boat;
-    const instructions = this.instructions[boatId];
+    const instructions = this.getBoatInstructions(boatId);
 
     return instructions || {};
   }

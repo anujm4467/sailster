@@ -32,7 +32,10 @@ import { IBoatMap } from '../../models/boat-state.interface';
 import { ICDNState } from '../../models/cdn-state.interface';
 import { ClinicsState } from '../../models/clinics.state';
 import { FONT_SIZE } from '../../models/font-size';
-import { InstructionsState } from '../../models/instructions-state.interface';
+import {
+  InstructionsMap,
+  InstructionsState,
+} from '../../models/instructions-state.interface';
 import { ProfileDialogData } from '../../models/profile-dialog-data.interface';
 import { IProfileMap } from '../../models/profile-state.interface';
 import {
@@ -61,6 +64,7 @@ import {
 } from '../../store/actions/boat.actions';
 import { fetchClinic } from '../../store/actions/clinic.actions';
 import { fetchCrewPerson } from '../../store/actions/crew.actions';
+import { fetchInstructionByBoat } from '../../store/actions/instructions.actions';
 import { fetchProfile } from '../../store/actions/profile.actions';
 import { fetchSailChecklist } from '../../store/actions/sail-checklist.actions';
 import { fetchSail } from '../../store/actions/sail.actions';
@@ -307,6 +311,23 @@ export class BasePageComponent implements OnDestroy, AfterViewInit {
       return;
     }
     return this.profiles[id];
+  }
+
+  public getBoatInstructions(boatId: string): InstructionsMap {
+    if(!this.instructions[boatId]) {
+      this.fetchBoatInstructions(boatId);
+    }
+
+    return this.instructions[boatId];
+  }
+
+  public fetchBoatInstructions(boatId: string): void {
+    if (this._fetching[boatId]) {
+      return;
+    }
+
+    this._fetching[boatId] = true;
+    this.dispatchAction(fetchInstructionByBoat({ boatId }));
   }
 
   public getProfile(id: string): IProfile {
