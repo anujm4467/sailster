@@ -314,7 +314,7 @@ export class BasePageComponent implements OnDestroy, AfterViewInit {
   }
 
   public getBoatInstructions(boatId: string): InstructionsMap {
-    if(!this.instructions[boatId]) {
+    if (!this.instructions[boatId]) {
       this.fetchBoatInstructions(boatId);
     }
 
