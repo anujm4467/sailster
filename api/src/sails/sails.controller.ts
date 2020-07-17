@@ -21,6 +21,7 @@ import { ApprovedUserGuard } from '../guards/approved-profile.guard';
 import { JwtGuard } from '../guards/jwt.guard';
 import { LoginGuard } from '../guards/login.guard';
 import { RolesGuard } from '../guards/roles.guard';
+import { UserAccessGuard } from '../guards/user-access.guard';
 import { HistoryService } from '../history/history.service';
 import { ProfileService } from '../profile-service/profile.service';
 import { RequiredActionsService } from '../required-actions/required-actions.service';
@@ -44,6 +45,7 @@ import {
   SAIL_PROPS,
 } from '../shared/sail/sail.interface';
 import { JwtObject } from '../shared/token/jwt-object.interface';
+import { USER_ACCESS_FIELDS } from '../shared/user-access/user-access.interface';
 import { SailsService } from './sails.service';
 
 export const POPULATE_ALL_PEOPLE: SAIL_PROPS[] = [
@@ -60,7 +62,7 @@ export const POPULATE_ALL: SAIL_PROPS[] = [
 ];
 
 @Controller('sails')
-@UseGuards(JwtGuard, LoginGuard, ApprovedUserGuard, RolesGuard)
+@UseGuards(JwtGuard, LoginGuard, ApprovedUserGuard, RolesGuard, UserAccessGuard)
 export class SailsController extends CrudController<ISail> {
 
   constructor(
@@ -76,7 +78,7 @@ export class SailsController extends CrudController<ISail> {
   }
 
   @Post()
-  @SetMetadata('roles', [PROFILE_ROLES.ADMIN, PROFILE_ROLES.COORDINATOR, PROFILE_ROLES.SKIPPER])
+  @SetMetadata('access', [USER_ACCESS_FIELDS.CREATE_SAIL])
   create(
     @Req() req: Request,
     @Body() document: ISail,
@@ -96,7 +98,7 @@ export class SailsController extends CrudController<ISail> {
   }
 
   @Patch(':id')
-  @SetMetadata('roles', [PROFILE_ROLES.ADMIN, PROFILE_ROLES.COORDINATOR, PROFILE_ROLES.SKIPPER])
+  @SetMetadata('access', [USER_ACCESS_FIELDS.EDIT_SAIL])
   update(@Req() req, @Param('id') id: string, @Body() document: ISail, @Query() query?: IQuery): Promise<ISail> {
     const user: JwtObject = req.user;
 
@@ -118,9 +120,8 @@ export class SailsController extends CrudController<ISail> {
 
   @Post('/start/:id')
   @SetMetadata('roles', [PROFILE_ROLES.SKIPPER, PROFILE_ROLES.CREW])
-  startSail(
-    @Req() req: Request,
-    @Param('id') id): Promise<ISail> {
+  startSail(@Req() req: Request, @Param('id') id): Promise<ISail> {
+    // @TODO check that the skipper and crew are assigned to this sail; reject if not.
     const user: JwtObject = req.user;
 
     return this.service
@@ -186,6 +187,7 @@ export class SailsController extends CrudController<ISail> {
   @Post('/cancel/:id')
   @SetMetadata('roles', [PROFILE_ROLES.SKIPPER, PROFILE_ROLES.ADMIN, PROFILE_ROLES.COORDINATOR])
   cancelSail(@Param('id') id, @Body() document: ISail): Promise<ISail> {
+    // @TODO check that the skipper is assigned to this sail and reject this request if not
 
     const cancelledSail: ISail = {
       cancelReason: document.cancelReason,
@@ -208,7 +210,6 @@ export class SailsController extends CrudController<ISail> {
   }
 
   @Post(':sailid/join/passenger')
-  @SetMetadata('roles', [PROFILE_ROLES.MEMBER])
   joinAsPassenger(@Req() req: Request, @Param('sailid') sailId: string, @Query() query): Promise<ISail> {
     const user: JwtObject = req.user;
     const userId = user.userId;
@@ -304,7 +305,6 @@ export class SailsController extends CrudController<ISail> {
   }
 
   @Post(':sailid/leave')
-  @SetMetadata('roles', [PROFILE_ROLES.SKIPPER, PROFILE_ROLES.CREW, PROFILE_ROLES.MEMBER])
   leaveSail(@Req() req: Request, @Param('sailid') sailId: string, @Query() query): Promise<ISail> {
     const user = req.user;
     const userId = user.userId;

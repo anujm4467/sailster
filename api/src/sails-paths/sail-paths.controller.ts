@@ -11,7 +11,6 @@ import { CrudController } from '../crud/crud.controller';
 import { ApprovedUserGuard } from '../guards/approved-profile.guard';
 import { JwtGuard } from '../guards/jwt.guard';
 import { LoginGuard } from '../guards/login.guard';
-import { RolesGuard } from '../guards/roles.guard';
 import { IPosition } from '../shared/sail-path/position.interface';
 import {
   ISailPath,
@@ -21,7 +20,7 @@ import { JwtObject } from '../shared/token/jwt-object.interface';
 import { SailPathsService } from './sail-paths.service';
 
 @Controller('sail-paths')
-@UseGuards(JwtGuard, LoginGuard, ApprovedUserGuard, RolesGuard)
+@UseGuards(JwtGuard, LoginGuard, ApprovedUserGuard)
 export class SailPathsController extends CrudController<ISailPath> {
   constructor(service: SailPathsService) {
     super(service);

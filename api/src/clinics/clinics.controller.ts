@@ -17,7 +17,6 @@ import { IQuery } from '../crud/crud.service';
 import { ApprovedUserGuard } from '../guards/approved-profile.guard';
 import { JwtGuard } from '../guards/jwt.guard';
 import { LoginGuard } from '../guards/login.guard';
-import { RolesGuard } from '../guards/roles.guard';
 import { UserAccessGuard } from '../guards/user-access.guard';
 import { ProfileService } from '../profile-service/profile.service';
 import { IAchivement } from '../shared/achievement/achievement.interface';
@@ -31,7 +30,7 @@ import { USER_ACCESS_FIELDS } from '../shared/user-access/user-access.interface'
 import { ClinicsService } from './clinics.service';
 
 @Controller('clinics')
-@UseGuards(JwtGuard, LoginGuard, ApprovedUserGuard, RolesGuard)
+@UseGuards(JwtGuard, LoginGuard, ApprovedUserGuard, UserAccessGuard)
 export class ClinicsController extends CrudController<IClinic> {
 
   constructor(
@@ -43,14 +42,12 @@ export class ClinicsController extends CrudController<IClinic> {
 
   @Post()
   @SetMetadata('access', [USER_ACCESS_FIELDS.CREATE_CLINIC])
-  @UseGuards(UserAccessGuard)
   create(@Req() req, @Body() document: IClinic, @Query() query?: IQuery): Promise<IClinic> {
     return super.create(req, document, query);
   }
 
   @Patch(':id')
   @SetMetadata('access', [USER_ACCESS_FIELDS.EDIT_CLINIC])
-  @UseGuards(UserAccessGuard)
   update(@Req() req, @Param('id') id: string, @Body() document: IClinic, @Query() query?: IQuery): Promise<IClinic> {
     return super.update(req, id, document, query);
   }

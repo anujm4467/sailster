@@ -15,19 +15,19 @@ import { CrudController } from '../crud/crud.controller';
 import { ApprovedUserGuard } from '../guards/approved-profile.guard';
 import { JwtGuard } from '../guards/jwt.guard';
 import { LoginGuard } from '../guards/login.guard';
-import { RolesGuard } from '../guards/roles.guard';
+import { UserAccessGuard } from '../guards/user-access.guard';
 import {
   IChallenge,
   IChallenger,
 } from '../shared/challenge/challenge.interface';
 import { IComment } from '../shared/comment/comment.interface';
 import { IMedia } from '../shared/media/media.interface';
-import { PROFILE_ROLES } from '../shared/profile/profile-roles.enum';
 import { JwtObject } from '../shared/token/jwt-object.interface';
+import { USER_ACCESS_FIELDS } from '../shared/user-access/user-access.interface';
 import { ChallengesService } from './challenges.service';
 
 @Controller('challenges')
-@UseGuards(JwtGuard, LoginGuard, ApprovedUserGuard, RolesGuard)
+@UseGuards(JwtGuard, LoginGuard, ApprovedUserGuard, UserAccessGuard)
 export class ChallengesController extends CrudController<IChallenge> {
   constructor(
     service: ChallengesService,
@@ -36,13 +36,13 @@ export class ChallengesController extends CrudController<IChallenge> {
   }
 
   @Post()
-  @SetMetadata('roles', [PROFILE_ROLES.ADMIN])
+  @SetMetadata('access', [USER_ACCESS_FIELDS.CREATE_CHALLENGE])
   create(@Req() req, @Body() document, @Query() query) {
     return super.create(req, document, query);
   }
 
   @Patch(':id')
-  @SetMetadata('roles', [PROFILE_ROLES.ADMIN])
+  @SetMetadata('access', [USER_ACCESS_FIELDS.EDIT_CHALLENGE])
   update(@Req() req, @Param('id') id: string, @Body() document, @Query() query) {
     return super.update(req, id, document, query);
   }

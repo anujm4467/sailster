@@ -10,13 +10,13 @@ import { IQuery } from '../crud/crud.service';
 import { ApprovedUserGuard } from '../guards/approved-profile.guard';
 import { JwtGuard } from '../guards/jwt.guard';
 import { LoginGuard } from '../guards/login.guard';
-import { RolesGuard } from '../guards/roles.guard';
+import { UserAccessGuard } from '../guards/user-access.guard';
 import { ILog } from '../shared/log/log.interface';
-import { PROFILE_ROLES } from '../shared/profile/profile-roles.enum';
+import { USER_ACCESS_FIELDS } from '../shared/user-access/user-access.interface';
 import { LogsService } from './logs.service';
 
 @Controller('logs')
-@UseGuards(JwtGuard, LoginGuard, ApprovedUserGuard, RolesGuard)
+@UseGuards(JwtGuard, LoginGuard, ApprovedUserGuard, UserAccessGuard)
 export class LogsController extends CrudController<ILog> {
   constructor(
     service: LogsService,
@@ -29,7 +29,7 @@ export class LogsController extends CrudController<ILog> {
   }
 
   @Get()
-  @SetMetadata('roles', [PROFILE_ROLES.ADMIN])
+  @SetMetadata('access', [USER_ACCESS_FIELDS.VIEW_LOGS])
   find<R>(@Query() query: IQuery) {
     return super.find<R>(query);
   }

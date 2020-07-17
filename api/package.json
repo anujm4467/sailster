@@ -60,6 +60,7 @@
     "@types/supertest": "2.0.8",
     "babel-loader": "8.0.6",
     "concurrently": "5.0.0",
+    "husky": "4.2.5",
     "jest": "24.9.0",
     "nodemon": "2.0.0",
     "supertest": "4.0.2",
@@ -73,6 +74,11 @@
     "webpack": "4.41.2",
     "webpack-cli": "3.3.10",
     "webpack-node-externals": "1.7.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "yarn lint"
+    }
   },
   "engines": {
     "yarn": "^1.19.1",

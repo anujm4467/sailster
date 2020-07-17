@@ -21,6 +21,7 @@ import { ApprovedUserGuard } from '../guards/approved-profile.guard';
 import { JwtGuard } from '../guards/jwt.guard';
 import { LoginGuard } from '../guards/login.guard';
 import { RolesGuard } from '../guards/roles.guard';
+import { UserAccessGuard } from '../guards/user-access.guard';
 import { ProfileService } from '../profile-service/profile.service';
 import { RequiredActionsService } from '../required-actions/required-actions.service';
 import { PROFILE_ROLES } from '../shared/profile/profile-roles.enum';
@@ -33,6 +34,7 @@ import { IRequiredAction } from '../shared/required-action/required-action.inter
 import { REQUIRED_ACTION_STATE } from '../shared/required-action/required-action.state';
 import { REQUIRED_ACTIONS } from '../shared/required-action/required-action.types';
 import { JwtObject } from '../shared/token/jwt-object.interface';
+import { USER_ACCESS_FIELDS } from '../shared/user-access/user-access.interface';
 
 @Controller('profiles')
 @UseGuards(JwtGuard, LoginGuard, ApprovedUserGuard, RolesGuard)
@@ -113,7 +115,8 @@ export class ProfilesController extends CrudController<IProfile> {
   }
 
   @Patch('update-access/:id')
-  @SetMetadata('roles', [PROFILE_ROLES.ADMIN])
+  @SetMetadata('access', [USER_ACCESS_FIELDS.EDIT_USER_ACCESS])
+  @UseGuards(UserAccessGuard)
   updateAccess(
     @Param('id') id: string,
     @Body() document: IProfile,

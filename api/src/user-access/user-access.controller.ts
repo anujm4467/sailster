@@ -38,8 +38,8 @@ export class UserAccessController extends CrudController<IUserAccess> {
   }
 
   @Patch(':profileId')
-  @UseGuards(UserAccessGuard)
   @SetMetadata('access', [USER_ACCESS_FIELDS.EDIT_USER_ACCESS])
+  @UseGuards(UserAccessGuard)
   updateUserAccess(@Param('profileId') profileId: string, @Body() access: IUserAccess): Promise<IUserAccess> {
     return this.service.updateById(profileId, access, {}, { upsert: true, new: true });
   }
