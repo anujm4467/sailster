@@ -222,6 +222,7 @@ export class EmailUtils {
     const sendTo: Set<string> = new Set<string>();
 
     sendTo.add(this.ADMIN_EMAIL);
+    sendTo.add(this.SAIL_COORDINATOR_EMAIL);
     sendTo.add(this.NOTIFICATIONS_EMAIL);
 
     if (sail.skipper) {
@@ -249,9 +250,11 @@ export class EmailUtils {
     const crew = sail.crew ? sail.crew.name : 'n/a';
     const passengers = sail.passengers ? sail.passengers.map(passenger => passenger.name).join(', ') : 'n/a';
 
+    const toEmails = this.populateToEmails(sail);
+
     this.emailService
       .sendEmail(
-        [this.ADMIN_EMAIL, this.SAIL_COORDINATOR_EMAIL],
+        toEmails,
         this.NOTIFICATIONS_EMAIL,
         `A new sail was created`,
         `A new sail was created by (${profileName}).
@@ -274,9 +277,11 @@ export class EmailUtils {
     const crew = sail.crew ? sail.crew.name : 'n/a';
     const passengers = sail.passengers ? sail.passengers.map(passenger => passenger.name).join(', ') : 'n/a';
 
+    const toEmails = this.populateToEmails(sail);
+
     this.emailService
       .sendEmail(
-        [this.ADMIN_EMAIL, this.SAIL_COORDINATOR_EMAIL],
+        toEmails,
         this.NOTIFICATIONS_EMAIL,
         `Your sail was updated`,
         `Your sail (${sail.name}) was updated by (${profileName}).

@@ -37,12 +37,16 @@ export const REDUCER_TOKEN = new InjectionToken<ActionReducerMap<any>>(
   }
 );
 
-Sentry.init({
-  // THIS IS REPLCED WITH ACTUAL VALUE BY start-servers.sh
-  dsn: 'SENTRY_DSN',
-});
+try {
+  Sentry.init({
+    // THIS IS REPLCED WITH ACTUAL VALUE BY start-servers.sh
+    dsn: 'SENTRY_DSN',
+  });
 
-Sentry.captureEvent({ level: Sentry.Severity.Info, message: 'Sentry initialized in app.module.ts' });
+  Sentry.captureEvent({ level: Sentry.Severity.Info, message: 'Sentry initialized in app.module.ts' });
+} catch (error) {
+  console.error(error);
+}
 
 @Injectable()
 export class SentryErrorHandler implements ErrorHandler {
