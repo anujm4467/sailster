@@ -24,14 +24,14 @@ export class EmailService {
   public sendEmail(to: string | string[], from: string, subject: string, text: string): void {
 
     const data = {
-      from: process.env.EMAIL_FROM_ACCOUNT,
       to,
-      cc: from,
-      bcc: process.env.EMAIL_FROM_ACCOUNT,
       subject,
       text,
+      cc: from,
+      from: process.env.EMAIL_FROM_ACCOUNT,
+      bcc: process.env.EMAIL_FROM_ACCOUNT,
     };
 
-    sendEmail(data).catch((error) => this.logError(error));
+    sendEmail(data).catch(error => this.logError(error));
   }
 }

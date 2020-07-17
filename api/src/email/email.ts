@@ -1,11 +1,11 @@
 import nodemailer = require('nodemailer');
-import SMTPTransport = require('nodemailer/lib/smtp-transport');
-import Mail = require('nodemailer/lib/mailer');
+import smtpTransport = require('nodemailer/lib/smtp-transport');
+import mailer = require('nodemailer/lib/mailer');
 
-const connectionInfo: SMTPTransport.Options = {
+const connectionInfo: smtpTransport.Options = {
   host: process.env.EMAIL_HOST,
-  port: JSON.parse(process.env.EMAIL_PORT || "465"),
-  secure: JSON.parse(process.env.EMAIL_SECURE || "true"),
+  port: JSON.parse(process.env.EMAIL_PORT || '465'),
+  secure: JSON.parse(process.env.EMAIL_SECURE || 'true'),
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASSWORD,
@@ -14,6 +14,6 @@ const connectionInfo: SMTPTransport.Options = {
 
 const transporter = nodemailer.createTransport(connectionInfo);
 
-export const sendEmail = (email: Mail.Options): Promise<nodemailer.SentMessageInfo> => {
+export const sendEmail = (email: mailer.Options): Promise<nodemailer.SentMessageInfo> => {
   return transporter.sendMail(email);
 };
