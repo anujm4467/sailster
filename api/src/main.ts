@@ -14,6 +14,7 @@ declare module 'express' {
     logService?: LogsService;
   }
 }
+
 Sentry.init({ dsn: process.env.SENTRY_DSN });
 Sentry.captureEvent({ level: Sentry.Severity.Info, message: 'Sentry initialized in main.ts' });
 

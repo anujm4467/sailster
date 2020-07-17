@@ -11,6 +11,8 @@ import { EmailService } from './email.service';
 
 export class EmailUtils {
   private readonly ADMIN_EMAIL = process.env.ADMIN_EMAIL;
+  private readonly NOTIFICATIONS_EMAIL = process.env.NOTIFICATIONS_EMAIL;
+  private readonly SAIL_COORDINATOR_EMAIL = process.env.SAIL_COORDINATOR_EMAIL || this.ADMIN_EMAIL;
   private readonly DOMAIN = process.env.DOMAIN;
 
   constructor(private emailService: EmailService) { }
@@ -21,13 +23,12 @@ export class EmailUtils {
     const sendTo: Set<string> = new Set<string>();
     sendTo.add(requester);
     sendTo.add(modifiedBy.email);
-
     sendTo.add(this.ADMIN_EMAIL);
 
     this.emailService
       .sendEmail(
         Array.from(sendTo),
-        this.ADMIN_EMAIL,
+        this.NOTIFICATIONS_EMAIL,
         `A change was made to sail request`,
         `
 
@@ -58,7 +59,7 @@ export class EmailUtils {
     this.emailService
       .sendEmail(
         Array.from(sendTo),
-        this.ADMIN_EMAIL,
+        this.NOTIFICATIONS_EMAIL,
         `A new sail request was submitted`,
         `Sail Request Details:
         Requested by: ${request.by.name}
@@ -83,7 +84,7 @@ export class EmailUtils {
     this.emailService
       .sendEmail(
         Array.from(sendTo),
-        this.ADMIN_EMAIL,
+        this.NOTIFICATIONS_EMAIL,
         `A new maintenace request was submitted`,
         `Maintenance Request Details:
         Requested by: ${report.requestedBy.name}
@@ -139,7 +140,7 @@ export class EmailUtils {
     this.emailService
       .sendEmail(
         Array.from(sendTo),
-        this.ADMIN_EMAIL,
+        this.NOTIFICATIONS_EMAIL,
         `Change made to a maintenace request`,
         `${profileName} updated information:\n\r${changeSummary.join('\n\r')}`,
       );
@@ -163,7 +164,7 @@ export class EmailUtils {
     this.emailService
       .sendEmail(
         Array.from(sendTo),
-        this.ADMIN_EMAIL,
+        this.NOTIFICATIONS_EMAIL,
         `A new comment was posted on Boat Maintenance Request`,
         `New Comment: ${comment.comment};
         Author: ${user.username}
@@ -180,7 +181,7 @@ export class EmailUtils {
     this.emailService
       .sendEmail(
         Array.from(sendTo),
-        this.ADMIN_EMAIL,
+        this.NOTIFICATIONS_EMAIL,
         `A new comment was posted on sail (${sail.name})`,
         `New Comment: ${comment.comment};
         Author: ${user.username}
@@ -221,6 +222,7 @@ export class EmailUtils {
     const sendTo: Set<string> = new Set<string>();
 
     sendTo.add(this.ADMIN_EMAIL);
+    sendTo.add(this.NOTIFICATIONS_EMAIL);
 
     if (sail.skipper) {
       sendTo.add(sail.skipper.email);
@@ -249,8 +251,8 @@ export class EmailUtils {
 
     this.emailService
       .sendEmail(
-        this.ADMIN_EMAIL,
-        this.ADMIN_EMAIL,
+        [this.ADMIN_EMAIL, this.SAIL_COORDINATOR_EMAIL],
+        this.NOTIFICATIONS_EMAIL,
         `A new sail was created`,
         `A new sail was created by (${profileName}).
         Sail details:
@@ -274,8 +276,8 @@ export class EmailUtils {
 
     this.emailService
       .sendEmail(
-        this.ADMIN_EMAIL,
-        this.ADMIN_EMAIL,
+        [this.ADMIN_EMAIL, this.SAIL_COORDINATOR_EMAIL],
+        this.NOTIFICATIONS_EMAIL,
         `Your sail was updated`,
         `Your sail (${sail.name}) was updated by (${profileName}).
         Latest sail details:
@@ -309,7 +311,7 @@ export class EmailUtils {
     this.emailService
       .sendEmail(
         sendTo,
-        this.ADMIN_EMAIL,
+        this.NOTIFICATIONS_EMAIL,
         `New ${userRole} on your sail`,
         `A new ${userRole} (${profileName}) has joined your sail (${sail.name}) scheduled for ${sail.start}.`,
       );
@@ -321,7 +323,7 @@ export class EmailUtils {
     this.emailService
       .sendEmail(
         sendTo,
-        this.ADMIN_EMAIL,
+        this.NOTIFICATIONS_EMAIL,
         'Your sail was cancelled',
         `Your sail (${sail.name}) which was scheduled for ${sail.start} was cancelled.
          Canceled by ${sail.cancelledBy.name}.
@@ -335,7 +337,7 @@ export class EmailUtils {
     this.emailService
       .sendEmail(
         this.ADMIN_EMAIL,
-        this.ADMIN_EMAIL,
+        this.NOTIFICATIONS_EMAIL,
         'New account awaiting approval',
         `${profileName} is awating for profile review.
        Go to ${this.DOMAIN}/admin to review their profile.`,
@@ -346,7 +348,7 @@ export class EmailUtils {
     this.emailService
       .sendEmail(
         profileEmail,
-        this.ADMIN_EMAIL,
+        this.NOTIFICATIONS_EMAIL,
         'Your profile was approved',
         `Your profile was approved.
        You now have access to ${this.DOMAIN}.
